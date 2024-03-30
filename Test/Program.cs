@@ -6,6 +6,7 @@ builder.Services.Configure<RouteHandlerOptions>
 
 var app = builder.Build();
 
+new Middleware(app);
 new ErrorHandler(app);
 new FileServer(app, "www");
 new REST(app);
