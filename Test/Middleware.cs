@@ -1,6 +1,5 @@
 public class Middleware
 {
-  public static string cookieValue = "";
 
   public Middleware(WebApplication app, string serverName)
   {
@@ -9,39 +8,37 @@ public class Middleware
       context.Response.OnStarting(() =>
       {
         SetServerHeader(context, serverName);
-        EnsureCookie(context);
+        var session = new SessionHandler();
+        session.Touch(context);
         return Task.CompletedTask;
       });
 
-      await next();
+      await next(context);
     });
   }
 
-  public void SetServerHeader(HttpContext context, string serverName)
+  public static void SetServerHeader(HttpContext context, string serverName)
   {
     var res = context.Response;
     res.Headers.Append("Server", serverName);
   }
 
-  public void EnsureCookie(HttpContext context)
+  // Return the cookie value used for sessions
+  // (set it first if it doesn't exist already)
+  public static string GetCookieValue(HttpContext context)
   {
-    var request = context.Request;
-    var response = context.Response;
+    var req = context.Request;
+    var res = context.Response;
 
-    string? temp;
-    request.Cookies.TryGetValue("session", out temp);
-    cookieValue = temp == null ? "" : temp;
+    string? cookieValue;
+    req.Cookies.TryGetValue("session", out cookieValue);
 
-    if (cookieValue == "")
+    if (cookieValue == null)
     {
       cookieValue = Guid.NewGuid().ToString();
-      response.Cookies.Append("session", cookieValue);
+      res.Cookies.Append("session", cookieValue);
     }
 
-  }
-
-  public static string GetCookieValue()
-  {
     return cookieValue;
   }
 

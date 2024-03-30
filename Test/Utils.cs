@@ -4,6 +4,13 @@ using Newtonsoft.Json;
 public class Utils : UtilsForProperties
 {
 
+  public static void Log(string label, object obj)
+  {
+    Console.WriteLine(
+      label + " " + JsonConvert.SerializeObject(obj)
+    );
+  }
+
   public static object[] JSONToArray(
     string json, params object[] extraParameters
   )

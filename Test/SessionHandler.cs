@@ -4,16 +4,20 @@ using Newtonsoft.Json;
 public class SessionHandler
 {
 
-  private static object Retrieve()
+  private string? cookieValue;
+
+  private object Retrieve(HttpContext context)
   {
-    var cookieValue = Middleware.GetCookieValue();
+    cookieValue = cookieValue != null ?
+      cookieValue : Middleware.GetCookieValue(context);
     var found = SQLQuery.RunOne(
       "SELECT * FROM sessions WHERE id = $id",
-      "id", cookieValue != null ? cookieValue : ""
+      "id", cookieValue
     );
     found = found != null ? found : new ExpandoObject();
-    if (!Utils.HasProperty(found, "data"))
+    if (!Utils.HasProperty(found, "id"))
     {
+      Utils.SetProperty(found, "id", cookieValue);
       Utils.SetProperty(found, "data", new ExpandoObject());
     }
     else
@@ -28,44 +32,60 @@ public class SessionHandler
     return found;
   }
 
-  public static object GetValue(string key)
+  public void Touch(HttpContext context)
+  {
+    cookieValue = cookieValue != null ?
+      cookieValue : Middleware.GetCookieValue(context);
+    var result = SQLQuery.RunOne(
+      @"UPDATE sessions SET modified=DATETIME('now')
+        WHERE id = $id",
+      "id", cookieValue
+    );
+    if ((int)Utils.GetPropertyValue(result, "rowsAffected") == 0)
+    {
+      SQLQuery.RunOne(
+        @"INSERT INTO sessions(id, data)
+        VALUES ($id, $data)",
+        "id", cookieValue,
+        "data", "{}"
+      );
+    }
+  }
+
+  public object GetValue(
+    HttpContext context, string key
+  )
   {
     return Utils.GetPropertyValue(
-      Utils.GetPropertyValue(Retrieve(), "data"), key
+      Utils.GetPropertyValue(Retrieve(context), "data"), key
     );
   }
 
-  public static void SetValue(string key, object value)
+  public void SetValue(
+    HttpContext context, string key, object value
+  )
   {
-    // Need to pack JSON here
-    var retrieved = Retrieve();
-    var cookieValue = Middleware.GetCookieValue();
+    var retrieved = Retrieve(context);
     var data = Utils.GetPropertyValue(retrieved, "data");
     var created = Utils.GetPropertyValue(retrieved, "created");
     Utils.SetProperty(data, key, value);
     var parameters = new List<Object>()
-    {
-      "id", cookieValue,
-      "data",  JsonConvert.SerializeObject(data)
-    };
+      {"data",  JsonConvert.SerializeObject(data)};
+    string sql;
+    var cookieValue = Utils.GetPropertyValue(retrieved, "id");
+    parameters.Add("id");
+    parameters.Add(cookieValue);
     if (created != null)
     {
-      parameters.Add("created");
-      parameters.Add(created);
+      sql = @"UPDATE sessions 
+              SET modified=DATETIME('now'), data=$data 
+              WHERE id=$id";
     }
-    var addCreated1 = created != null ? ", created" : "";
-    var addCreated2 = created != null ? ", $created" : "";
-    var sql = $"INSERT INTO sessions(id, data{addCreated1})" +
-      $" VALUES($id,$data{addCreated2})";
-    Console.WriteLine(sql);
-    foreach (var parameter in parameters)
+    else
     {
-      Console.WriteLine(parameter);
+      sql = @"INSERT INTO sessions(id, data) 
+              VALUES($id,$data)";
     }
-    SQLQuery.RunOne(
-      "DELETE FROM sessions WHERE id = $id",
-      "id", cookieValue
-    );
     SQLQuery.RunOne(sql, parameters.ToArray());
   }
 
