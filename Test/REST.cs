@@ -26,7 +26,6 @@ public class REST
         var insertId = Utils.GetPropertyValue(SQLQuery.RunOne(
           $"SELECT id FROM {table} ORDER BY id DESC LIMIT 1"
         ), "id");
-        /*((IDictionary<string, object>)result).Add("insertId", insertId);*/
         Utils.SetProperty(result, "insertId", insertId);
       }
       return Result.encode(result);

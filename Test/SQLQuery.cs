@@ -34,10 +34,6 @@ public class SQLQuery
         var rowsAffected = command.ExecuteNonQuery();
         Utils.SetProperty(row, "command", sql.Split(" ")[0].ToUpper());
         Utils.SetProperty(row, "rowsAffected", rowsAffected);
-        /*((IDictionary<string, object>)row)
-          .Add("command", sql.Split(" ")[0].ToUpper());
-        ((IDictionary<string, object>)row)
-          .Add("rowsAffected", rowsAffected);*/
         rows.Add(row);
       }
       // SELECT queries
@@ -54,7 +50,6 @@ public class SQLQuery
               object value = valueAsStr;
               if (regExDouble.IsMatch(valueAsStr)) { value = reader.GetDouble(i); }
               else if (regExInt.IsMatch(valueAsStr)) { value = reader.GetInt64(i); }
-              /*((IDictionary<string, object>)row).Add(reader.GetName(i), value);*/
               Utils.SetProperty(row, reader.GetName(i), value);
             }
             rows.Add(row);
