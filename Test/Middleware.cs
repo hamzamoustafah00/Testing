@@ -25,6 +25,8 @@ public class Middleware
 
   // Return the cookie value used for sessions
   // (set it first if it doesn't exist already)
+  // IMPORTANT: ONLY CALL ONCE per request 
+  // (and this already happens in SessionHandler)
   public static string GetCookieValue(HttpContext context)
   {
     var req = context.Request;
