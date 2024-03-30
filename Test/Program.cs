@@ -11,5 +11,6 @@ new ErrorHandler(app);
 new FileServer(app, "www");
 new LoginHandler(app);
 new REST(app);
+SessionHandler.DeleteOldSessions(2);
 
 app.Run("http://localhost:3001");

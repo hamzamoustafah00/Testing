@@ -40,4 +40,17 @@ public class SessionHandler : SessionBasics
     SQLQuery.RunOne(sql, parameters.ToArray());
   }
 
+  // Only call once for the whole app
+  public static async void DeleteOldSessions(int timeToLiveHours)
+  {
+    while (true)
+    {
+      SQLQuery.RunOne(
+        @$"DELETE FROM sessions WHERE 
+           DATETIME('now', '-{timeToLiveHours} hours') > modified"
+      );
+      await Task.Delay(60000); // check one a minute
+    }
+  }
+
 }
