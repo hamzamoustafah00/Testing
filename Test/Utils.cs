@@ -1,7 +1,7 @@
 using System.Dynamic;
 using Newtonsoft.Json;
 
-public class Utils : UtilsForProperties
+public class Utils : UtilsForProps
 {
 
   public static void Log(string label, object obj)

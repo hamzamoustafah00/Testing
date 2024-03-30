@@ -1,6 +1,6 @@
 using System.Dynamic;
 
-public class UtilsForProperties
+public class UtilsForProps
 {
 
   public static bool HasProperty(object obj, string property)
