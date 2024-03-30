@@ -40,6 +40,7 @@ public class SessionBasics
         WHERE id = $id",
       "id", cookieValue
     );
+    Utils.Log("result", result);
     if ((int)Utils.GetPropertyValue(result, "rowsAffected") == 0)
     {
       SQLQuery.RunOne(

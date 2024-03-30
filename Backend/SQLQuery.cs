@@ -5,8 +5,10 @@ using Microsoft.Data.Sqlite;
 public class SQLQuery
 {
 
+  public static string? dbPath;
+
   public static SqliteConnection db =
-    new SqliteConnection("Data Source=db.sqlite3");
+    new SqliteConnection("Data Source=_db.sqlite3");
 
   public static object Run(string sql, params object[] parameters)
   {

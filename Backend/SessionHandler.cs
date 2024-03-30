@@ -49,7 +49,8 @@ public class SessionHandler : SessionBasics
         @$"DELETE FROM sessions WHERE 
            DATETIME('now', '-{timeToLiveHours} hours') > modified"
       );
-      await Task.Delay(60000); // check one a minute
+      // Check once a minute
+      await Task.Delay(60000);
     }
   }
 
