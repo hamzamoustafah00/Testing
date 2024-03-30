@@ -8,7 +8,7 @@ public class FileServer
     app.UseFileServer(new FileServerOptions
     {
       FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), folder)
+        Path.Combine(Directory.GetCurrentDirectory(), "..", folder)
       )
     });
   }
