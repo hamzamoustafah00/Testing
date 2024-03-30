@@ -9,7 +9,7 @@ public class REST
 
     app.MapPost("/api/{table}", (string table, JsonElement body) =>
     {
-      var parameters = Utils.JSONElementToArray(body);
+      var parameters = Utils.JSONToArray(body.ToString());
       var columns = "";
       var values = "";
       for (var i = 0; i < parameters.Length; i += 2)
@@ -26,7 +26,8 @@ public class REST
         var insertId = Utils.GetPropertyValue(SQLQuery.RunOne(
           $"SELECT id FROM {table} ORDER BY id DESC LIMIT 1"
         ), "id");
-        ((IDictionary<string, object>)result).Add("insertId", insertId);
+        /*((IDictionary<string, object>)result).Add("insertId", insertId);*/
+        Utils.SetProperty(result, "insertId", insertId);
       }
       return Result.encode(result);
     });
@@ -48,7 +49,7 @@ public class REST
       string table, int id, JsonElement body
     ) =>
     {
-      var parameters = Utils.JSONElementToArray(body, "id", id);
+      var parameters = Utils.JSONToArray(body.ToString(), "id", id);
       var columns = "";
       for (var i = 0; i < parameters.Length; i += 2)
       {

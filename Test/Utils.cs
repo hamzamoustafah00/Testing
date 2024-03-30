@@ -1,33 +1,15 @@
 using System.Dynamic;
-using System.Text.Json;
 using Newtonsoft.Json;
 
-public class Utils
+public class Utils : UtilsForProperties
 {
 
-  public static bool HasProperty(object obj, string property)
-  {
-    obj = obj == null ? new { } : obj;
-    return obj is ExpandoObject ?
-     ((IDictionary<string, object>)obj).ContainsKey(property) :
-      obj.GetType().GetProperty(property) != null;
-  }
-
-  public static object GetPropertyValue(object obj, string property)
-  {
-    obj = obj == null ? new { } : obj;
-    var value = obj is ExpandoObject && HasProperty(obj, property) ?
-    ((IDictionary<string, object>)obj)[property] :
-     obj.GetType().GetProperty(property);
-    return value != null ? value : default! /*null*/;
-  }
-
-  public static object[] JSONElementToArray(
-    JsonElement jsonEl, params object[] extraParameters
+  public static object[] JSONToArray(
+    string json, params object[] extraParameters
   )
   {
     var dict = JsonConvert.DeserializeObject
-      <Dictionary<string, dynamic>>(jsonEl.ToString());
+      <Dictionary<string, dynamic>>(json);
     dict = dict != null ? dict : new Dictionary<string, dynamic>();
     var list = new List<object>();
     foreach (var item in dict)
@@ -40,6 +22,17 @@ public class Utils
       list.Add(parameter);
     }
     return list.ToArray();
+  }
+
+  public static ExpandoObject JSONToExpando(string json)
+  {
+    var arr = JSONToArray(json);
+    var obj = new ExpandoObject();
+    for (var i = 0; i < arr.Length; i += 2)
+    {
+      Utils.SetProperty(obj, (string)arr[i], arr[i + 1]);
+    }
+    return obj;
   }
 
 }

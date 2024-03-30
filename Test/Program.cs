@@ -6,9 +6,10 @@ builder.Services.Configure<RouteHandlerOptions>
 
 var app = builder.Build();
 
-new Middleware(app);
+new Middleware(app, "ironboy's minimal API server");
 new ErrorHandler(app);
 new FileServer(app, "www");
+new LoginHandler(app);
 new REST(app);
 
 app.Run("http://localhost:3001");
