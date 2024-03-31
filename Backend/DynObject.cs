@@ -4,19 +4,16 @@ using System.Text.RegularExpressions;
 // Note: This version of DynObject is customized 
 // for SQLite and our current SQLQuery class 
 
-public class DynObject : DynObjectGeneric
+public class DynObject : DynObjectGet
 {
+  public DynObject() : base() { }
+  public DynObject(object obj) : base(obj) { }
+  public DynObject(string json) : base(json) { }
 
   private static Regex regExInt =
     new Regex("^\\d{1,}$", RegexOptions.Compiled);
   private static Regex regExDouble =
     new Regex("^[\\d\\.]{1,}$", RegexOptions.Compiled);
-
-  public DynObject() : base() { }
-
-  public DynObject(object obj) : base(obj) { }
-
-  public DynObject(string json) : base(json) { }
 
   public DynObject(SqliteDataReader reader)
   {
