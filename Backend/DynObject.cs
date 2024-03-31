@@ -22,9 +22,10 @@ public class DynObject : DynObjectGeneric
     for (var i = 0; i < reader.FieldCount; i++)
     {
       var valueAsStr = reader.GetString(i);
-      object value = valueAsStr;
-      if (regExDouble.IsMatch(valueAsStr)) { value = reader.GetDouble(i); }
-      else if (regExInt.IsMatch(valueAsStr)) { value = reader.GetInt64(i); }
+      object value =
+        regExDouble.IsMatch(valueAsStr) ? reader.GetDouble(i) :
+        regExInt.IsMatch(valueAsStr) ? reader.GetInt64(i) :
+        valueAsStr;
       Set(reader.GetName(i), value);
     }
   }
