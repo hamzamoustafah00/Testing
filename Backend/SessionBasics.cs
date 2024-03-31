@@ -1,11 +1,9 @@
-using System.Dynamic;
-
 public class SessionBasics
 {
 
   private string? cookieValue;
 
-  public object Retrieve(HttpContext context)
+  public DynObject Retrieve(HttpContext context)
   {
     cookieValue = cookieValue != null ?
       cookieValue : Middleware.GetCookieValue(context);
@@ -13,20 +11,16 @@ public class SessionBasics
       "SELECT * FROM sessions WHERE id = $id",
       "id", cookieValue
     );
-    found = found != null ? found : new ExpandoObject();
-    if (!Utils.HasProperty(found, "id"))
+
+    found = found != null ? found : new DynObject();
+    if (found.HasKey("id"))
     {
-      Utils.SetProperty(found, "id", cookieValue);
-      Utils.SetProperty(found, "data", new ExpandoObject());
+      found.Set("id", cookieValue);
+      found.Set("data", new DynObject());
     }
     else
     {
-      Utils.SetProperty(
-        found, "data",
-        Utils.JSONToExpando(
-          (string)Utils.GetPropertyValue(found, "data")
-        )
-      );
+      found.Set("data", new DynObject(found.Get("data")));
     }
     return found;
   }
@@ -40,11 +34,11 @@ public class SessionBasics
         WHERE id = $id",
       "id", cookieValue
     );
-    if ((int)Utils.GetPropertyValue(result, "rowsAffected") == 0)
+    if (result.GetInt("rowsAffected") == 0)
     {
       SQLQuery.RunOne(
         @"INSERT INTO sessions(id, data)
-        VALUES ($id, $data)",
+          VALUES ($id, $data)",
         "id", cookieValue,
         "data", "{}"
       );

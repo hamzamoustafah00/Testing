@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+/*var builder = WebApplication.CreateBuilder(args);
 
 // Always throw custom errors (in dev and production)
 builder.Services.Configure<RouteHandlerOptions>
@@ -13,4 +13,21 @@ new LoginHandler(app);
 new REST(app);
 SessionHandler.DeleteOldSessions(2);
 
-app.Run("http://localhost:3001");
+app.Run("http://localhost:3001");*/
+
+var a = new DynObject(new
+{
+  name = "Anna",
+  age = 42,
+  friends = new List<string>() { "Eva", "Erik" },
+  hobby = new
+  {
+    name = "Fishing",
+    cool = true
+  }
+});
+
+// Console.WriteLine(a.ToJson());
+Console.WriteLine(JSON.Stringify(a));
+Console.WriteLine(a.Get("hobby.name"));
+Console.WriteLine(a.Get("friends.1"));

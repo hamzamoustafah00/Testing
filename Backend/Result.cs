@@ -3,13 +3,18 @@ public class Result
 
   public static IResult encode(object result)
   {
-    var statusCode =
-      Utils.HasProperty(result, "error") ? 500 :
-      (int?)Utils.GetPropertyValue(result, "rowsAffected") == 0 ? 404 :
-      result == null ? 404 :
-      200;
+    int statusCode = 200;
 
-    result = result != null ? result : new { error = "404. Not found." };
+    // set the status code correctly
+    if (result is DynObject)
+    {
+      DynObject r = (DynObject)result;
+      statusCode =
+        r.HasKey("error") ? 500 :
+        r.HasKey("rowsAffected") && r.GetInt("rowsAffected") == 0 ? 404 :
+        result == null ? 404 :
+        200;
+    }
 
     return Results.Json(
       result,

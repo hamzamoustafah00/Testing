@@ -3,19 +3,23 @@ using Newtonsoft.Json;
 public class SessionHandler : SessionBasics
 {
 
-  public object GetValue(
-      HttpContext context, string key
-    )
+  public object GetValue(HttpContext context, string key)
   {
-    return Utils.GetPropertyValue(
-      Utils.GetPropertyValue(Retrieve(context), "data"), key
-    );
+    return ((DynObject)Retrieve(context).Get("data")).Get(key);
   }
 
   public void SetValue(
     HttpContext context, string key, object value
   )
   {
+    /*var retrieved = Retrieve(context);
+    var data = (DynObject)retrieved.Get("data");
+    var created = retrieved.GetStr("created");
+    data.Set(key, value);*/
+
+
+
+
     var retrieved = Retrieve(context);
     var data = Utils.GetPropertyValue(retrieved, "data");
     var created = Utils.GetPropertyValue(retrieved, "created");

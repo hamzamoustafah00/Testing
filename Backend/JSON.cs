@@ -12,6 +12,6 @@ public class JSON
 
   public static string Stringify(object obj)
   {
-    return JsonConvert.SerializeObject(obj);
+    return JsonConvert.SerializeObject(obj, Formatting.Indented);
   }
 }

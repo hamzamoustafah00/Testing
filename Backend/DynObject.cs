@@ -1,7 +1,9 @@
 using Microsoft.Data.Sqlite;
 using System.Text.RegularExpressions;
 
-// Note: This version of DynObject is customized for SQLite
+// Note: This version of DynObject is customized 
+// for SQLite and our current SQLQuery class 
+
 public class DynObject : DynObjectGeneric
 {
 
@@ -12,13 +14,12 @@ public class DynObject : DynObjectGeneric
 
   public DynObject() : base() { }
 
-  public DynObject(string json) : base(json) { }
-
   public DynObject(object obj) : base(obj) { }
+
+  public DynObject(string json) : base(json) { }
 
   public DynObject(SqliteDataReader reader)
   {
-    memory = new Dictionary<string, dynamic>();
     for (var i = 0; i < reader.FieldCount; i++)
     {
       var valueAsStr = reader.GetString(i);
@@ -30,12 +31,15 @@ public class DynObject : DynObjectGeneric
     }
   }
 
-  public void ToSqliteParams(SqliteParameterCollection parameters)
+  public object[] ToQueryParams()
   {
-    foreach (var item in memory)
+    var parameters = new List<object>();
+    foreach (var item in this)
     {
-      parameters.AddWithValue(item.Key, item.Value);
+      parameters.Add(item.Key);
+      parameters.Add(item.Value);
     }
+    return parameters.ToArray();
   }
 
 }
