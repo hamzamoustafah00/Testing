@@ -3,12 +3,12 @@ using Microsoft.Extensions.FileProviders;
 public class FileServer
 {
 
-  public FileServer(WebApplication app, string folder)
+  public FileServer(WebApplication app, string[] path)
   {
     app.UseFileServer(new FileServerOptions
     {
       FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "..", folder)
+        Path.Combine(Directory.GetCurrentDirectory())
       )
     });
   }

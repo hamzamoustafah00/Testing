@@ -15,7 +15,13 @@ public class REST
       for (var i = 0; i < parameters.Length; i += 2)
       {
         var column = (string)parameters[i];
-        if (column.ToLower() == "id") { continue; }
+        if (
+         column == "id" ||
+         (table == "users" && column == "role")
+       )
+        {
+          continue;
+        }
         columns += (i != 0 ? ", " : "") + column;
         values += (i != 0 ? ", " : "") + "$" + column;
       }
@@ -53,7 +59,13 @@ public class REST
       for (var i = 0; i < parameters.Length; i += 2)
       {
         var column = (string)parameters[i];
-        if (column.ToLower() == "id") { continue; }
+        if (
+          column == "id" ||
+          (table == "users" && column == "role")
+        )
+        {
+          continue;
+        }
         columns += (i != 0 ? ", " : "") + column + " = $" + column;
       }
       var sql = $"UPDATE {table} SET {columns} WHERE id = $id";
