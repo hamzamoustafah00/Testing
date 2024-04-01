@@ -8,34 +8,33 @@ using Microsoft.Data.Sqlite;
 
 public partial class DynObject
 {
+    private static Regex regExInt =
+        new Regex("^\\d{1,}$", RegexOptions.Compiled);
+    private static Regex regExDouble =
+        new Regex("^[\\d\\.]{1,}$", RegexOptions.Compiled);
 
-  private static Regex regExInt =
-    new Regex("^\\d{1,}$", RegexOptions.Compiled);
-  private static Regex regExDouble =
-    new Regex("^[\\d\\.]{1,}$", RegexOptions.Compiled);
-
-  public DynObject(SqliteDataReader reader)
-  {
-    for (var i = 0; i < reader.FieldCount; i++)
+    public DynObject(SqliteDataReader reader)
     {
-      var valueAsStr = reader.GetString(i);
-      object value =
-        regExDouble.IsMatch(valueAsStr) ? reader.GetDouble(i) :
-        regExInt.IsMatch(valueAsStr) ? reader.GetInt64(i) :
-        valueAsStr;
-      Set(reader.GetName(i), value);
+        for (var i = 0; i < reader.FieldCount; i++)
+        {
+            var valueAsStr = reader.GetString(i);
+            object value =
+              regExDouble.IsMatch(valueAsStr) ? reader.GetDouble(i) :
+              regExInt.IsMatch(valueAsStr) ? reader.GetInt64(i) :
+              valueAsStr;
+            Set(reader.GetName(i), value);
+        }
     }
-  }
 
-  public object[] ToQueryParams()
-  {
-    var parameters = new List<object>();
-    foreach (var item in this)
+    public object[] ToQueryParams()
     {
-      parameters.Add(item.Key);
-      parameters.Add(item.Value);
+        var parameters = new List<object>();
+        foreach (var item in this)
+        {
+            parameters.Add(item.Key);
+            parameters.Add(item.Value);
+        }
+        return parameters.ToArray();
     }
-    return parameters.ToArray();
-  }
 
 }
