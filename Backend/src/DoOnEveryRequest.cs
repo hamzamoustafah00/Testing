@@ -7,6 +7,8 @@ public class DoOnEveryRequest
         {
             SetServerHeader(context, serverName);
             //TouchSession(context);
+            SessionHandle.Touch(context);
+            SessionHandle.Touch(context);
             await next(context);
         });
     }
