@@ -32,11 +32,6 @@ public partial class DynObject : Dictionary<string, dynamic>
     this.Add(key, value);
   }
 
-  public bool HasKey(string key)
-  {
-    return Get(key) + "" != "[undefined]";
-  }
-
   public object Get(string key)
   {
     object obj = this;

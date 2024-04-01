@@ -1,8 +1,10 @@
-using Microsoft.Data.Sqlite;
 using System.Text.RegularExpressions;
+using Microsoft.Data.Sqlite;
 
-// Note: This version of DynObject is customized 
-// for SQLite and our current SQLQuery class 
+// Note: 
+// This part of DynObject has an extra constructor customized
+// for the ADO.NET SQlite driver, used in the SQLQuery class
+// and the method ToQueryParams used in the REST class
 
 public partial class DynObject
 {

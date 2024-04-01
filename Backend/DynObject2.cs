@@ -1,6 +1,11 @@
 public partial class DynObject
 {
 
+  public bool HasKey(string key)
+  {
+    return Get(key) + "" != "[undefined]";
+  }
+
   public string GetStr(string key)
   {
     return Get(key) + "";
