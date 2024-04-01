@@ -6,11 +6,11 @@ builder.Services.Configure<RouteHandlerOptions>
 
 var app = builder.Build();
 
-new DoOnEveryRequest(app, "ironboy's minimal API server");
-new ErrorHandler(app);
-new FileServer(app, "..", "Frontend");
-new LoginHandler(app);
-new REST(app);
+DoOnEveryRequest.Start(app, "ironboy's minimal API server");
+ErrorHandler.Start(app);
+FileServer.Start(app, "..", "Frontend");
+LoginHandler.Start(app);
+REST.Start(app);
 SessionHandler.DeleteOldSessions(2);
 
 app.Run("http://localhost:3001");

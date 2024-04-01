@@ -2,12 +2,10 @@ using Microsoft.Data.Sqlite;
 
 public static class SQLQuery
 {
-    public static string? dbPath;
-
-    public static SqliteConnection db =
+    private static SqliteConnection db =
         new SqliteConnection("Data Source=_db.sqlite3");
 
-    public static List<DynObject> Run(
+    public static List<DynObject> All(
         string sql, params object[] parameters
     )
     {
@@ -59,13 +57,13 @@ public static class SQLQuery
         return rows;
     }
 
-    public static DynObject RunOne(
+    public static DynObject Run(
         string sql, params object[] parameters
     )
     {
         // Return the first object in the list 
         // or null if the list is empty
-        var result = Run(sql, parameters);
+        var result = All(sql, parameters);
         DynObject resultOne;
         try { resultOne = ((List<DynObject>)result)[0]; }
         catch (Exception) { return default!; /*default! == null*/}

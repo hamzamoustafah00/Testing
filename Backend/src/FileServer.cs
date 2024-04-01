@@ -1,8 +1,8 @@
 using Microsoft.Extensions.FileProviders;
 
-public class FileServer
+public static class FileServer
 {
-    public FileServer(WebApplication app, params string[] pathParts)
+    public static void Start(WebApplication app, params string[] pathParts)
     {
         var path = Directory.GetCurrentDirectory();
         foreach (var part in pathParts) { path = Path.Combine(path, part); }

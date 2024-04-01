@@ -17,14 +17,14 @@ public static class SessionHandle
             context.Response.Cookies.Append("session", value);
         }
         // Check if the DB has a session with this cookie as id
-        var exists = SQLQuery.RunOne(
+        var exists = SQLQuery.Run(
             "SELECT * FROM sessions WHERE id = $id",
             "id", value
         );
         if (exists == null)
         {
             // Otherwise store a new session in the DB
-            SQLQuery.RunOne(
+            SQLQuery.Run(
                  "INSERT INTO sessions(id) VALUES($id)",
                  "id", value
             );
@@ -37,7 +37,7 @@ public static class SessionHandle
     {
         var cookieValue = GetCookieValue(context);
         // Touch the session - set modified to now!
-        SQLQuery.RunOne(
+        SQLQuery.Run(
             @"UPDATE sessions SET modified = DATETIME('now')
               WHERE id = $id",
             "id", cookieValue

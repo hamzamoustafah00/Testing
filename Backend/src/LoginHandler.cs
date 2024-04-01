@@ -1,6 +1,6 @@
-public class LoginHandler
+public static class LoginHandler
 {
-    public LoginHandler(WebApplication app)
+    public static void Start(WebApplication app)
     {
         app.MapPost("/api/login", (HttpContext context) =>
         {

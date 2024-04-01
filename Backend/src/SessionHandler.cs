@@ -39,7 +39,7 @@ public class SessionHandler : SessionBasics
             sql = @"INSERT INTO sessions(id, data) 
                     VALUES($id,$data)";
         }
-        SQLQuery.RunOne(sql, parameters.ToArray());
+        SQLQuery.Run(sql, parameters.ToArray());
     }
 
     // Only call once for the whole app
@@ -47,7 +47,7 @@ public class SessionHandler : SessionBasics
     {
         while (true)
         {
-            SQLQuery.RunOne(
+            SQLQuery.Run(
                 @$"DELETE FROM sessions WHERE 
                    DATETIME('now', '-{timeToLiveHours} hours') > modified"
             );

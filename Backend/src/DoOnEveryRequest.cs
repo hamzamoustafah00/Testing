@@ -1,13 +1,11 @@
-public class DoOnEveryRequest
+public static class DoOnEveryRequest
 {
-    public DoOnEveryRequest(WebApplication app, string serverName)
+    public static void Start(WebApplication app, string serverName)
     {
         // Middleware that affects all requests
         app.Use(async (context, next) =>
         {
             SetServerHeader(context, serverName);
-            //TouchSession(context);
-            SessionHandle.Touch(context);
             SessionHandle.Touch(context);
             await next(context);
         });

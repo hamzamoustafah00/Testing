@@ -8,7 +8,7 @@ public class SessionBasics
             cookieValue != null ?
             cookieValue : GetCookieValue(context);
 
-        var found = SQLQuery.RunOne(
+        var found = SQLQuery.Run(
             "SELECT * FROM sessions WHERE id = $id",
             "id", cookieValue
         );
@@ -32,7 +32,7 @@ public class SessionBasics
             cookieValue != null ?
             cookieValue : GetCookieValue(context);
 
-        var result = SQLQuery.RunOne(
+        var result = SQLQuery.Run(
             @"UPDATE sessions SET modified=DATETIME('now')
               WHERE id = $id",
             "id", cookieValue
@@ -40,7 +40,7 @@ public class SessionBasics
 
         if (result.GetInt("rowsAffected") == 0)
         {
-            SQLQuery.RunOne(
+            SQLQuery.Run(
                 @"INSERT INTO sessions(id, data)
                   VALUES ($id, $data)",
                 "id", cookieValue,

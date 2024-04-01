@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Diagnostics;
 
-public class ErrorHandler
+public static class ErrorHandler
 {
-    public ErrorHandler(WebApplication app)
+    public static void Start(WebApplication app)
     {
         app.UseExceptionHandler((exceptionApp) =>
         {

@@ -1,9 +1,9 @@
 
 using System.Text.Json;
 
-public class REST
+public static class REST
 {
-    private DynObject ReqBodyParse(string table, DynObject body)
+    private static DynObject ReqBodyParse(string table, DynObject body)
     {
         // Filter body: Always remove "id" + remove "role" in users table
         var keys = body.GetKeys().Where(key =>
@@ -18,7 +18,7 @@ public class REST
         });
     }
 
-    public REST(WebApplication app)
+    public static void Start(WebApplication app)
     {
         app.MapPost("/api/{table}", (string table, JsonElement bodyJson) =>
         {
@@ -27,10 +27,10 @@ public class REST
             var columns = parsed.GetStr("insertColumns");
             var values = parsed.GetStr("insertValues");
             var sql = $"INSERT INTO {table}({columns}) VALUES({values})";
-            var result = SQLQuery.RunOne(sql, body.ToQueryParams());
+            var result = SQLQuery.Run(sql, body.ToQueryParams());
             if (!result.HasKey("error"))
             {
-                result.Set("insertId", SQLQuery.RunOne(
+                result.Set("insertId", SQLQuery.Run(
                     $"SELECT id FROM {table} ORDER BY id DESC LIMIT 1"
                 ).GetInt("id"));
             }
@@ -39,11 +39,11 @@ public class REST
 
         app.MapGet("/api/{table}", (HttpContext context, string table) =>
         {
-            return Result.encode(SQLQuery.Run($"SELECT * FROM {table}"));
+            return Result.encode(SQLQuery.All($"SELECT * FROM {table}"));
         });
 
         app.MapGet("/api/{table}/{id}", (string table, int id) =>
-            Result.encode(SQLQuery.RunOne(
+            Result.encode(SQLQuery.Run(
                 $"SELECT * FROM {table} WHERE id = $id",
                 "id", id
             ))
@@ -57,12 +57,12 @@ public class REST
             var parsed = ReqBodyParse(table, body);
             var update = parsed.GetStr("update");
             var sql = $"UPDATE {table} SET {update} WHERE id = $id";
-            var result = SQLQuery.RunOne(sql, body.ToQueryParams());
+            var result = SQLQuery.Run(sql, body.ToQueryParams());
             return Result.encode(result);
         });
 
         app.MapDelete("/api/{table}/{id}", (string table, int id) =>
-            Result.encode(SQLQuery.RunOne(
+            Result.encode(SQLQuery.Run(
                 $"DELETE FROM {table} WHERE id = $id",
                 "id", id
             ))
