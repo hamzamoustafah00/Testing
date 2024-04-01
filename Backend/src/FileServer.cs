@@ -2,13 +2,13 @@ using Microsoft.Extensions.FileProviders;
 
 public class FileServer
 {
-    public FileServer(WebApplication app, string path)
+    public FileServer(WebApplication app, params string[] pathParts)
     {
+        var path = Directory.GetCurrentDirectory();
+        foreach (var part in pathParts) { path = Path.Combine(path, part); }
         app.UseFileServer(new FileServerOptions
         {
-            FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "..", path)
-            )
+            FileProvider = new PhysicalFileProvider(path)
         });
     }
 }

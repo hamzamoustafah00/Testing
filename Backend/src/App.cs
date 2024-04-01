@@ -8,7 +8,7 @@ var app = builder.Build();
 
 new DoOnEveryRequest(app, "ironboy's minimal API server");
 new ErrorHandler(app);
-new FileServer(app, "Frontend");
+new FileServer(app, "..", "Frontend");
 new LoginHandler(app);
 new REST(app);
 SessionHandler.DeleteOldSessions(2);
