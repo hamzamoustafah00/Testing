@@ -4,15 +4,13 @@ public static class LoginHandler
     {
         app.MapPost("/api/login", (HttpContext context) =>
         {
-            var session = new SessionHandler();
-            session.SetValue(context, "user", "hepp");
-            return Result.encode(session.GetValue(context, "user"));
+            Session.Set(context, "user", new { firstName = "Joe", lastName = "Doe" });
+            return Result.encode(new { ok = true });
         });
 
         app.MapGet("/api/login", (HttpContext context) =>
         {
-            var session = new SessionHandler();
-            Result.encode(session.GetValue(context, "user"));
+            return Result.encode(Session.Get(context, "user"));
         });
     }
 }
