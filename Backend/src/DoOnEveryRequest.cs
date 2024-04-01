@@ -5,13 +5,8 @@ public class DoOnEveryRequest
         // Middleware that affects all requests
         app.Use(async (context, next) =>
         {
-            context.Response.OnStarting(() =>
-            {
-                SetServerHeader(context, serverName);
-                TouchSession(context);
-                return Task.CompletedTask;
-            });
-
+            SetServerHeader(context, serverName);
+            //TouchSession(context);
             await next(context);
         });
     }

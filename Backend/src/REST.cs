@@ -37,9 +37,10 @@ public class REST
             return Result.encode(result);
         });
 
-        app.MapGet("/api/{table}", (string table) =>
-          Result.encode(SQLQuery.Run($"SELECT * FROM {table}"))
-        );
+        app.MapGet("/api/{table}", (HttpContext context, string table) =>
+        {
+            return Result.encode(SQLQuery.Run($"SELECT * FROM {table}"));
+        });
 
         app.MapGet("/api/{table}/{id}", (string table, int id) =>
             Result.encode(SQLQuery.RunOne(
