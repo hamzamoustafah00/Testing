@@ -23,8 +23,8 @@ public class Middleware
     res.Headers.Append("Server", serverName);
   }
 
-  // Return the cookie value used for sessions
-  // (set it first if it doesn't exist already)
+  // Returns the cookie value used for sessions
+  // (sets it first if it doesn't exist already)
   // IMPORTANT: ONLY CALL ONCE per request 
   // (and this already happens in SessionHandler)
   public static string GetCookieValue(HttpContext context)
