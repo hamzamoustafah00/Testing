@@ -4,11 +4,8 @@ using System.Text.RegularExpressions;
 // Note: This version of DynObject is customized 
 // for SQLite and our current SQLQuery class 
 
-public class DynObject : DynObjectGet
+public partial class DynObject
 {
-  public DynObject() : base() { }
-  public DynObject(object obj) : base(obj) { }
-  public DynObject(string json) : base(json) { }
 
   private static Regex regExInt =
     new Regex("^\\d{1,}$", RegexOptions.Compiled);

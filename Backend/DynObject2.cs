@@ -1,9 +1,5 @@
-public abstract class DynObjectGet : DynObjGeneric
+public partial class DynObject
 {
-
-  public DynObjectGet() : base() { }
-  public DynObjectGet(object obj) : base(obj) { }
-  public DynObjectGet(string json) : base(json) { }
 
   public string GetStr(string key)
   {

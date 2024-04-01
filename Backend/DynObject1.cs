@@ -1,4 +1,4 @@
-public abstract class DynObjGeneric : Dictionary<string, dynamic>
+public partial class DynObject : Dictionary<string, dynamic>
 {
 
   protected void init(Dictionary<string, dynamic> initDict)
@@ -9,14 +9,14 @@ public abstract class DynObjGeneric : Dictionary<string, dynamic>
     }
   }
 
-  public DynObjGeneric() { }
+  public DynObject() { }
 
-  public DynObjGeneric(object obj)
+  public DynObject(object obj)
   {
     init(JSON.Parse(JSON.Stringify(obj)));
   }
 
-  public DynObjGeneric(string json)
+  public DynObject(string json)
   {
     init(JSON.Parse(json));
   }
