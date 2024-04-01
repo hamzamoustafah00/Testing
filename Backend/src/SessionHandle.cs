@@ -2,7 +2,7 @@ public static class SessionHandle
 {
   private static string GetCookieValue(HttpContext context)
   {
-    // Remember: context.Items is request specific!
+    // Note: context.Items is request specific!
     var value = context.Items["cookieValue"] as string;
     if (value == null)
     {
