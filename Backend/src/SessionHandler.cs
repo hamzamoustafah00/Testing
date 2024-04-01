@@ -9,7 +9,7 @@ public class SessionHandler : SessionBasics
     }
 
     public void SetValue(
-      HttpContext context, string key, object value
+        HttpContext context, string key, object value
     )
     {
         /*var retrieved = Retrieve(context);
