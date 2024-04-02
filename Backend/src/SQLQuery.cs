@@ -70,7 +70,7 @@ public static class SQLQuery
         var result = All(sql, parameters);
         DynObject resultOne;
         try { resultOne = ((List<DynObject>)result)[0]; }
-        catch (Exception) { return default!; /*default! == null*/}
+        catch (Exception) { return null!; }
         return resultOne;
     }
 }
