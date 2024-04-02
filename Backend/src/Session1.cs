@@ -3,15 +3,16 @@ public static partial class Session
 {
     private static DynObject GetRawSession(HttpContext context)
     {
-        // If cached already for this request in context.Items
+        // If the session is already cached in context.Items
+        // (if we call this method more than once per request)
         var inContext = context.Items["session"];
         if (inContext is DynObject)
         {
             return (DynObject)inContext;
         }
 
-        // Get the cookie value if we have cookie called "session"
-        // - otherwise create such a cookie!
+        // Get the cookie value if we have a session cookie
+        // - otherwise create a session cookie
         string? cookieValue;
         context.Request.Cookies.TryGetValue("session", out cookieValue);
         if (cookieValue == null)
@@ -35,7 +36,7 @@ public static partial class Session
             session = new DynObject();
         }
 
-        // Cache in context.Items
+        // Cache the session in context.Items
         context.Items["session"] = session;
 
         return session;
