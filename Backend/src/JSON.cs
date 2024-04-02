@@ -12,6 +12,11 @@ public static class JSON
 
     public static string Stringify(object obj)
     {
+        return JsonConvert.SerializeObject(obj);
+    }
+
+    public static string StringifyIndented(object obj)
+    {
         return JsonConvert.SerializeObject(obj, Formatting.Indented);
     }
 }

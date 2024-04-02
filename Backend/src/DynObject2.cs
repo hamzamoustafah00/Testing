@@ -49,6 +49,6 @@ public partial class DynObject
 
     public override string ToString()
     {
-        return ToJson();
+        return JSON.StringifyIndented(this);
     }
 }

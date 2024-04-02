@@ -9,7 +9,7 @@ var app = builder.Build();
 DoOnEveryRequest.Start(app, "ironboy's minimal API server");
 ErrorHandler.Start(app);
 FileServer.Start(app, "..", "Frontend");
-LoginHandler.Start(app);
+LoginRoutes.Start(app);
 REST.Start(app);
 Session.DeleteOldSessions(2);
 

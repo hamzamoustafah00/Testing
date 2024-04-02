@@ -1,4 +1,4 @@
-public static class LoginHandler
+public static class LoginRoutes
 {
     public static void Start(WebApplication app)
     {
