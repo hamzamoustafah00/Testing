@@ -40,5 +40,4 @@ public partial class DynObject
         }
         return parameters.ToArray();
     }
-
 }
