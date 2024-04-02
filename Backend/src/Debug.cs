@@ -1,4 +1,3 @@
-using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
 public static class Debug
@@ -16,18 +15,24 @@ public static class Debug
             Console.WriteLine("\n" + route);
         }
 
+        if (type == "acl")
+        {
+            Console.WriteLine(data);
+        }
+
         if (type == "sql")
         {
             var d = new DynObject(data);
             var sql = Regex.Replace(d.GetStr("sql"), @"\s+", " ");
 
             // Ignore logging for: 
-            // 1) Sql queries to session
+            // 1) Sql queries to session and acl
             // 2) The SELECT to determine insertId after an INSERT
             if (
                 sql.Contains("FROM sessions") ||
                 sql.Contains("INTO sessions") ||
                 sql.Contains("UPDATE sessions") ||
+                sql.Contains("FROM acl") ||
                 sql.Contains("__insertId")
             ) { return; }
 

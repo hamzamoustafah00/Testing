@@ -18,7 +18,8 @@ public static class LoginRoutes
             // If there is a user logged in already
             if (user != null)
             {
-                return Result.encode(new { error = "User already logged in." });
+                var already = new { error = "A user is already logged in." };
+                return Result.encode(already);
             }
 
             // Find the user in the DB
@@ -69,7 +70,7 @@ public static class LoginRoutes
 
             return Result.encode(user == null ?
                 new { error = "No user is logged in." } :
-                new { status = "Successfully logged out." }
+                new { status = "Successful logout." }
             );
         });
     }
