@@ -58,19 +58,19 @@ public static class LoginRoutes
         });
 
         app.MapDelete("/api/login", (HttpContext context) =>
-      {
-          var user = GetUser(context);
+        {
+            var user = GetUser(context);
 
-          // Delete the user from the session
-          if (user != null)
-          {
-              Session.Set(context, "user", null!);
-          }
+            // Delete the user from the session
+            if (user != null)
+            {
+                Session.Set(context, "user", null!);
+            }
 
-          return Result.encode(user == null ?
-              new { error = "No user is logged in." } :
-              new { status = "Successfully logged out." }
-          );
-      });
+            return Result.encode(user == null ?
+                new { error = "No user is logged in." } :
+                new { status = "Successfully logged out." }
+            );
+        });
     }
 }
