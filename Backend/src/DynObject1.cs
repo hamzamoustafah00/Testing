@@ -1,8 +1,8 @@
 public partial class DynObject : Dictionary<string, dynamic>
 {
-    protected void init(Dictionary<string, dynamic> initDict)
+    protected void init(object initDict)
     {
-        foreach (var item in initDict)
+        foreach (var item in (Dictionary<string, dynamic>)initDict)
         {
             this[item.Key] = item.Value;
         }

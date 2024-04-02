@@ -18,14 +18,12 @@ public partial class DynObject
         for (var i = 0; i < reader.FieldCount; i++)
         {
             var key = reader.GetName(i);
-            // do not include passwords
-            if (key == "password") { continue; }
 
             var valueAsStr = reader.GetString(i);
             object value =
-              regExDouble.IsMatch(valueAsStr) ? reader.GetDouble(i) :
-              regExInt.IsMatch(valueAsStr) ? reader.GetInt64(i) :
-              valueAsStr;
+                regExInt.IsMatch(valueAsStr) ? reader.GetInt64(i) :
+                regExDouble.IsMatch(valueAsStr) ? reader.GetDouble(i) :
+                valueAsStr;
             Set(key, value);
         }
     }

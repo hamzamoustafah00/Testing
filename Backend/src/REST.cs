@@ -43,7 +43,7 @@ public static class REST
             return Result.encode(SQLQuery.All($"SELECT * FROM {table}"));
         });
 
-        app.MapGet("/api/{table}/{id}", (string table, int id) =>
+        app.MapGet("/api/{table}/{id}", (string table, string id) =>
             Result.encode(SQLQuery.Run(
                 $"SELECT * FROM {table} WHERE id = $id",
                 "id", id
@@ -51,7 +51,7 @@ public static class REST
         );
 
         app.MapPut("/api/{table}/{id}", (
-            string table, int id, JsonElement bodyJson
+            string table, string id, JsonElement bodyJson
         ) =>
         {
             var body = new DynObject(bodyJson.ToString());
