@@ -9,6 +9,9 @@ public static class REST
         var keys = body.GetKeys().Where(key =>
             key != "id" && (table != "users" || key != "role")
         );
+        // Always encrypt "password"
+        keys = keys.Select(key =>
+            key == "password" ? Password.Encrypt(key) : key);
         // Return dynamically created column specific parts of SQL queries
         return new DynObject(new
         {

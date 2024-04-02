@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Data.Sqlite;
 
 public static class SQLQuery
@@ -20,6 +21,7 @@ public static class SQLQuery
                 (string)parameters[i], parameters[i + 1]
             );
         }
+        Debug.Log("sql", new { sql, parameters });
 
         // Run query and collect result
         var rows = new List<DynObject>();
@@ -50,8 +52,10 @@ public static class SQLQuery
         // (also see Result.cs for how status code are set)
         catch (Exception error)
         {
+            var err = error.Message.Split("'")[1];
+            Debug.Log("sqlError", err);
             rows = new List<DynObject>() {
-                new DynObject(new { error = error.Message.Split("'")[1] })
+                new DynObject(new { error = err })
             };
         }
         return rows;

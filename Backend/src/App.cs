@@ -1,5 +1,6 @@
 var serverName = "ironboy's minimal API server";
 var builder = WebApplication.CreateBuilder(args);
+Debug.on = true;
 
 // Throw custom errors, in both dev and production
 builder.Services.Configure<RouteHandlerOptions>
@@ -12,6 +13,7 @@ var app = builder.Build();
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Append("Server", serverName);
+    Debug.Log("route", context);
     Session.Touch(context);
     await next(context);
 });
