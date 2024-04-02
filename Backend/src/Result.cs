@@ -2,7 +2,7 @@ public static class Result
 {
     private static DynObject rowModifier(DynObject row)
     {
-        // If null value then change the result to reflect that
+        // If null then change the result to error Not Found
         row = row != null ? row :
             new DynObject(new { error = "Not found." });
         // Delete the password
