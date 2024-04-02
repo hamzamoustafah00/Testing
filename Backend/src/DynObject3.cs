@@ -8,22 +8,17 @@ using Microsoft.Data.Sqlite;
 
 public partial class DynObject
 {
-    private static Regex regExInt =
-        new Regex("^\\d{1,}$", RegexOptions.Compiled);
-    private static Regex regExDouble =
-        new Regex("^[\\d\\.]{1,}$", RegexOptions.Compiled);
-
     public DynObject(SqliteDataReader reader)
     {
         for (var i = 0; i < reader.FieldCount; i++)
         {
             var key = reader.GetName(i);
 
-            var valueAsStr = reader.GetString(i);
+            var str = reader.GetString(i);
             object value =
-                regExInt.IsMatch(valueAsStr) ? reader.GetInt64(i) :
-                regExDouble.IsMatch(valueAsStr) ? reader.GetDouble(i) :
-                valueAsStr;
+                Regex.IsMatch(str, @"^\d{1,}$") ? reader.GetInt64(i) :
+                Regex.IsMatch(str, @"^[\d\.]{1,}$") ? reader.GetDouble(i) :
+                str;
             Set(key, value);
         }
     }
