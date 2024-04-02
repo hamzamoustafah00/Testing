@@ -1,7 +1,7 @@
 var serverName = "ironboy's minimal API server";
 var builder = WebApplication.CreateBuilder(args);
 
-// Always throw custom errors, in dev and production
+// Throw custom errors, in both dev and production
 builder.Services.Configure<RouteHandlerOptions>
     (o => o.ThrowOnBadRequest = true);
 
