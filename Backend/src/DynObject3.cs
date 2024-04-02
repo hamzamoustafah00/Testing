@@ -17,12 +17,16 @@ public partial class DynObject
     {
         for (var i = 0; i < reader.FieldCount; i++)
         {
+            var key = reader.GetName(i);
+            // do not include passwords
+            if (key == "password") { continue; }
+
             var valueAsStr = reader.GetString(i);
             object value =
               regExDouble.IsMatch(valueAsStr) ? reader.GetDouble(i) :
               regExInt.IsMatch(valueAsStr) ? reader.GetInt64(i) :
               valueAsStr;
-            Set(reader.GetName(i), value);
+            Set(key, value);
         }
     }
 
@@ -32,7 +36,9 @@ public partial class DynObject
         foreach (var item in this)
         {
             parameters.Add(item.Key);
-            parameters.Add(item.Value);
+            // Always encrypt passwords
+            parameters.Add(item.Key == "password" ?
+                Password.Encrypt(item.Value) : item.Value);
         }
         return parameters.ToArray();
     }

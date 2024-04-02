@@ -9,9 +9,6 @@ public static class REST
         var keys = body.GetKeys().Where(key =>
             key != "id" && (table != "users" || key != "role")
         );
-        // Always encrypt "password"
-        keys = keys.Select(key =>
-            key == "password" ? Password.Encrypt(key) : key);
         // Return dynamically created column specific parts of SQL queries
         return new DynObject(new
         {
@@ -34,8 +31,9 @@ public static class REST
             if (!result.HasKey("error"))
             {
                 result.Set("insertId", SQLQuery.Run(
-                    $"SELECT id FROM {table} ORDER BY id DESC LIMIT 1"
-                ).GetInt("id"));
+                    @$"SELECT id AS __insertId 
+                       FROM {table} ORDER BY id DESC LIMIT 1"
+                ).GetInt("__insertId"));
             }
             return Result.encode(result);
         });
