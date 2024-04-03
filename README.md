@@ -46,7 +46,7 @@ An example:
 
 ##### Currently supported operators for where
 *  !=, >=, <=, =, >, <, _AND_", "_OR_"
-*  Not paranthesis supported.
+*  No parenthesis supported.
 *  LIKE not supported (but thinking about adding it).
 
 ### SQL Injections? Are we safe against them?
