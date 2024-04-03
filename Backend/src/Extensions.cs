@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace ExtensionMethods
 {
-    public static class Utils
+    public static class StringUtils
     {
         public static string Regplace(
             this string str, string pattern, string replacement
@@ -18,7 +18,6 @@ namespace ExtensionMethods
 
         public static string Join(this string[] strArray, string glue)
         {
-            string[] cars = { "Volvo", "BMW", "Ford", "Mazda" };
             return string.Join(glue, strArray);
         }
 
