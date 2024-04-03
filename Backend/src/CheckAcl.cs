@@ -37,12 +37,13 @@ public static class CheckAcl
     public static bool Allow(HttpContext context)
     {
         if (!on) { return true; }
-        
+
         // Get info about the requested route and logged in user
         var method = context.Request.Method;
         var path = context.Request.Path;
         var user = Session.Get(context, "user");
         var userRole = user.GetStr("role").Replace("[undefined]", "visitor");
+        var userEmail = user.GetStr("email").Replace("[undefined]", "");
 
         // Go through all acl rules to and set allowed accordingly!
         var allowed = false;
@@ -70,7 +71,12 @@ public static class CheckAcl
             // and then we blacklist on top of that (check all disallow rules)
             allowed = ruleAllow ? allowed || allOk : allOk ? false : allowed;
         }
-        Debug.Log("acl", $"  ACL {allowed} for a user with the role '{userRole}'");
+
+        var userLabel = userEmail != "" ? "the user" : "the anonymous visitor";
+        userEmail = userEmail != "" ? "'" + userEmail + "' " : "";
+        Debug.Log(
+            "acl", $"  ACL: {allowed} for {userLabel}"
+            + $" {userEmail}with the role '{userRole}'.");
         return allowed;
     }
 }

@@ -1,3 +1,4 @@
+using System.Web;
 using System.Text.RegularExpressions;
 
 public static class Debug
@@ -11,7 +12,8 @@ public static class Debug
         if (type == "route")
         {
             var req = ((HttpContext)data).Request;
-            var route = req.Method + " " + req.Path;
+            var route = req.Method + " " + req.Path
+                + HttpUtility.UrlDecode(req.QueryString + "");
             Console.WriteLine("\n" + route);
         }
 
@@ -45,7 +47,9 @@ public static class Debug
             for (var i = 0; i < p.Length; i += 2)
             {
                 var key = ((string?)p[i])!.PadRight(longestKey);
-                Console.WriteLine("    $" + key + " = " + p[i + 1]);
+                var val = p[i + 1];
+                val = val.Type + "" == "String" ? $"\"{val}\"" : val;
+                Console.WriteLine($"    ${key} =  {val}");
             }
         }
 

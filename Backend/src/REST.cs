@@ -1,7 +1,8 @@
 
 using System.Text.Json;
+using ExtensionMethods;
 
-public static class REST
+public static class Rest
 {
     private static DynObject ReqBodyParse(string table, DynObject body)
     {
@@ -30,6 +31,7 @@ public static class REST
             var result = SQLQuery.Run(sql, body.ToQueryParams());
             if (!result.HasKey("error"))
             {
+                // Get the insert id and add to our result
                 result.Set("insertId", SQLQuery.Run(
                     @$"SELECT id AS __insertId 
                        FROM {table} ORDER BY id DESC LIMIT 1"
@@ -40,13 +42,19 @@ public static class REST
 
         app.MapGet("/api/{table}", (HttpContext context, string table) =>
         {
-            return Result.encode(SQLQuery.All($"SELECT * FROM {table}"));
+            var q = context.Request.Query;
+            var sql = $"SELECT * FROM {table}";
+            var extras = new RestExtras(
+                q["where"]!, q["orderby"]!, q["limit"]!, q["offset"]!
+            );
+            sql += extras.sql;
+            return Result.encode(SQLQuery.All(sql, extras.parameterArr!));
         });
 
         app.MapGet("/api/{table}/{id}", (string table, string id) =>
             Result.encode(SQLQuery.Run(
                 $"SELECT * FROM {table} WHERE id = $id",
-                "id", id
+                "id", id.Match(@"^\d{1,}$") ? Int32.Parse(id) : id
             ))
         );
 

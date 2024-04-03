@@ -28,7 +28,7 @@ app.Use(async (context, next) =>
 ErrorHandler.Start(app, serverName);
 FileServer.Start(app, "..", "Frontend");
 LoginRoutes.Start(app);
-REST.Start(app);
+Rest.Start(app);
 CheckAcl.Start();
 Session.DeleteOldSessions(2);
 
