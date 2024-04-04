@@ -1,9 +1,11 @@
 var serverName = "ironboy's minimal API server";
+var isSpa = true;
 Debug.on = true;
 CheckAcl.on = true;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
+
 
 // Middleware: Set the server name response header 
 // and touch the user session with a new timestamp
@@ -26,7 +28,7 @@ app.Use(async (context, next) =>
 
 // Set up routes, error handling, ACL and session purging
 ErrorHandler.Start(app, serverName);
-FileServer.Start(app, "..", "Frontend");
+FileServer.Start(app, isSpa, "..", "Frontend");
 LoginRoutes.Start(app);
 Rest.Start(app);
 CheckAcl.Start();
