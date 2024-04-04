@@ -17,14 +17,16 @@ public static class FileServer
             var response = context.Response;
             var statusCode = response.StatusCode;
             var isInApi = context.Request.Path.StartsWithSegments("/api");
+            var isFilePath = (context.Request.Path + "").Contains(".");
             var type = isInApi || statusCode != 404 ?
                 "application/json; charset=utf-8" : "text/html";
             var error = statusCode == 404 ?
                 "404. Not found." : "Status code: " + statusCode;
 
             response.ContentType = type;
-            if (isSpa && statusCode == 404 && !isInApi)
+            if (isSpa && !isFilePath && statusCode == 404 && !isInApi)
             {
+                response.StatusCode = 200;
                 await response.WriteAsync(
                     File.ReadAllText(Path.Combine(path, "index.html"))
                 );
