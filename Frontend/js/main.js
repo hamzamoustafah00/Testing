@@ -1,9 +1,7 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+import { $, $$ } from './$.js';
 
-// Wrap document.querySelector in a function so we can call it using $
-const $ = cssSelector => document.querySelector(cssSelector);
-
-// Remove diacritics (åäö etc) and kebab case a string
+// Remove diacritics (åäö etc) from a string and kebab case it
 const kebabCase = str => str
   .normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "")
@@ -45,16 +43,11 @@ $('body').innerHTML = /*html*/`
 
 // When we click somewhere - check if the click
 // sis on an a tag with an internal link
-$('body').addEventListener('click', e => {
-  // Check that we have clicked an a tag
-  let aTag = e.target.closest('a');
-  if (!aTag) { return; }
-  // Check that the link is internal (starts with '/')
-  let href = aTag.getAttribute('href');
-  if (!href[0] === '/') { return; }
+$$('a[href^="/"]').click((el, event) => {
+  let href = el.getAttribute('href');
   // Prevent the default behavior on click on an a tag 
   // (which is a hard page reload)
-  e.preventDefault();
+  event.preventDefault();
   // Instead change the url without reload
   history.pushState(null, '', href);
   showView();
