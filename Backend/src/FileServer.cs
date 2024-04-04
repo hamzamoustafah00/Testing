@@ -10,14 +10,15 @@ public static class FileServer
         foreach (var part in pathParts) { path = Path.Combine(path, part); }
 
         // Write status codes as response bodies
-        // + if the app is an SPA serve index.html on 404:s
+        // and if the app is an SPA serve index.html on non-file 404:s
         app.UseStatusCodePages(async statusCodeContext =>
         {
             var context = statusCodeContext.HttpContext;
+            var request = context.Request;
             var response = context.Response;
             var statusCode = response.StatusCode;
-            var isInApi = context.Request.Path.StartsWithSegments("/api");
-            var isFilePath = (context.Request.Path + "").Contains(".");
+            var isInApi = request.Path.StartsWithSegments("/api");
+            var isFilePath = (request.Path + "").Contains(".");
             var type = isInApi || statusCode != 404 ?
                 "application/json; charset=utf-8" : "text/html";
             var error = statusCode == 404 ?
