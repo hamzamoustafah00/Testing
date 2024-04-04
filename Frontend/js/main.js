@@ -1,5 +1,5 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
-import { $, $$ } from './$.js';
+import { $ } from './$.js';
 
 // Remove diacritics (åäö etc) from a string and kebab case it
 const kebabCase = str => str
@@ -19,7 +19,7 @@ const content =
 const menuItems = content.map(x => x.slice(4).split('<')[0]);
 
 // Add initial html for the site
-$('body').innerHTML = /*html*/`
+$('body').html(/*html*/`
   <header>
     <nav>
     <div class="logo">The Awesome Company</div>
@@ -39,17 +39,16 @@ $('body').innerHTML = /*html*/`
       </div>
     </section>
   </footer>
-`;
+`);
 
 // When we click somewhere - check if the click
-// sis on an a tag with an internal link
-$$('a[href^="/"]').click((el, event) => {
-  let href = el.getAttribute('href');
+// is on an a tag with an internal link
+$('a[href^="/"]').click((el, event) => {
   // Prevent the default behavior on click on an a tag 
   // (which is a hard page reload)
   event.preventDefault();
   // Instead change the url without reload
-  history.pushState(null, '', href);
+  history.pushState(null, '', el.attr('href'));
   showView();
 });
 
@@ -63,11 +62,9 @@ function showView() {
   // Get the content part corresponding to the menuItem
   let contentPart = content[index];
   // Replace the content in the main element
-  $('main article').innerHTML = contentPart;
-  // Add the css class active to the correct a tag in nav
-  let navTags = [...document.querySelectorAll('nav a')];
-  navTags.forEach(element => element.classList.remove('active'));
-  navTags[index].classList.add('active');
+  $('main article').html(contentPart);
+  // Add the css class 'active' to the active menu item
+  $('nav a').removeClass('active').eq(index).addClass('active');
 }
 
 // Listen to the back/forward buttons - change view based on url
