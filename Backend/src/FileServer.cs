@@ -25,7 +25,7 @@ public static class FileServer
                 "404. Not found." : "Status code: " + statusCode;
 
             response.ContentType = type;
-            if (isSpa && !isFilePath && statusCode == 404 && !isInApi)
+            if (isSpa && !isInApi && !isFilePath && statusCode == 404)
             {
                 response.StatusCode = 200;
                 await response.WriteAsync(
