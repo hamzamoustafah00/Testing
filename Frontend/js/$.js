@@ -20,7 +20,7 @@ function select(cssSelector = null, element = document) {
   return elements;
 }
 
-// Wrap a HTML Element in an elements array
+// Wrap an HTML Element in an elements array
 function wrap(element) {
   const arr = select();
   arr.push(element);
