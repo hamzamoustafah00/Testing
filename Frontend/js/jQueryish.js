@@ -18,6 +18,8 @@ function select(cssSelector = null, element = document) {
   addManipulationMethods(elements);
   // Add methods for delegated event handling to the array
   addDelegatedEventMethods(elements, cssSelector);
+  // Remember the cssSelector
+  elements.cssSel = cssSelector;
   return elements;
 }
 
@@ -46,7 +48,8 @@ function addManipulationMethods(elements) {
       els.forEach(x => x.classList.toggle(_class)),
     hasClass: _class =>
       els.any(x => x.classList.contains(_class)),
-    eq: index => wrap(els[index])
+    eq: index => wrap(els[index]),
+    $: cssSel => $(elements.cssSel + ' ' + cssSel)
   };
 
   // Add methods (and chainability when a method
