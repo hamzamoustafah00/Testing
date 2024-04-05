@@ -10,7 +10,8 @@ HTMLElement.prototype.$ = function (cssSelector) {
 
 // HTMLElement Query selector
 function select(cssSelector = null, element = document) {
-  let elements = element.querySelectorAll(cssSelector);
+  let elements = cssSelector === window ? [window] :
+    element.querySelectorAll(cssSelector);
   // Get the NodeList and convert it to a real array
   elements = [...elements];
   // Add some jQuery-inspired methods to the array
@@ -71,9 +72,11 @@ function addDelegatedEventMethods(elements, cssSelector) {
 }
 
 function addDelegatedEvent(type, cssSelector, handler) {
-  document.body.addEventListener(type, event => {
-    let closestEl = event.target.closest(cssSelector);
-    if (!closestEl) { return; }
-    handler(wrap(closestEl), event);
-  });
+  (cssSelector === window ? window : document)
+    .addEventListener(type, event => {
+      let closestEl = cssSelector === window ?
+        window : event.target.closest(cssSelector);
+      if (!closestEl) { return; }
+      handler(wrap(closestEl), event);
+    });
 }
