@@ -23,7 +23,7 @@ function select(cssSelector = null, element = document) {
 // Wrap an HTML Element in an elements array
 function wrap(element) {
   const arr = select();
-  arr.push(element);
+  element && arr.push(element);
   return arr;
 }
 
@@ -48,8 +48,8 @@ function addManipulationMethods(elements) {
     eq: index => wrap(els[index])
   };
 
-  // Add methods and chainability when a method
-  // does not return anything to the elements array
+  // Add methods (and chainability when a method
+  // does not return anything) to the elements array
   Object.entries(methods).forEach(([funcName, func]) =>
     els[funcName] = (...args) => {
       let result = func(...args);
@@ -62,7 +62,7 @@ function addManipulationMethods(elements) {
 // so we can do: $$('div').click(e => alert('I am a div'));
 
 const eventTypes = Object.getOwnPropertyNames(window)
-  .filter(x => x.slice(0, 2) === "on")
+  .filter(x => x.slice(0, 2) === 'on')
   .map(x => x.slice(2));
 
 function addDelegatedEventMethods(elements, cssSelector) {
