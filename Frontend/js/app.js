@@ -2,6 +2,7 @@
 import './stringExtras.js';
 import { $ } from './jQueryish.js';
 import { fetchEasy } from './fetchEasy.js';
+window.$ = $;
 
 // Read and parse the content
 const content = await fetchEasy('/content/_content.md');
@@ -24,10 +25,7 @@ $('body').html(bodySkeleton.hydrate({
 // don't reload the page - instead use pushState
 // and call showView
 $('a[href^="/"]').click((el, event) => {
-  // Prevent the default behavior on click on an a tag 
-  // (which is a hard page reload)
   event.preventDefault();
-  // Instead change the url without reload
   history.pushState(null, '', el.attr('href'));
   showView();
 });
@@ -45,7 +43,7 @@ function showView() {
 }
 
 // Listen to the back/forward buttons - change view based on url
-window.addEventListener('popstate', () => showView());
+$(window).popstate(() => showView());
 
 // Show the first view after a hard page load/reload
 showView();
