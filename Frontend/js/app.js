@@ -2,7 +2,6 @@
 import './stringExtras.js';
 import { $ } from './jQueryish.js';
 import { fetchEasy } from './fetchEasy.js';
-window.$ = $;
 
 // Read and parse the content
 const content = await fetchEasy('/content/_content.md');
