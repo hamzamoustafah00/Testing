@@ -1,4 +1,4 @@
-import { fetchEasy } from "./fetchEasy.js";
+import "./jQueryish.js";
 
 // Kebab case a string
 // after removing diacritics from chars
@@ -9,17 +9,19 @@ String.prototype.kebabCase = function () {
     .toLowerCase();
 }
 
-// Split an html string based on a headline level
-String.prototype.splitHtml = function (headlineLevel) {
-  let on = `<h${headlineLevel}>`;
-  return this.split(on).slice(1).map(part => on + part);
+// Extract html from a string based on a cssSelector
+String.prototype.extractHtml = function (cssSelector) {
+  let tempDiv = document.createElement('div');
+  tempDiv.innerHTML = this;
+  let extracted = tempDiv.$(cssSelector).html();
+  return extracted.length <= 1 ? extracted[0] : extracted;
 }
 
 // Replace {propName} in an html string 
 // with property values from an object
-// + if a property is a function you we call it
-// + if you call async with async = true, you can 
-//   chain in a call to wait to resolve async function calls
+// + if a property is a function we call it
+// + if async = true, we can wait for async functions:
+//   await "some string".revive(data,true).wait()
 String.prototype.revive = function (data = {}, async = false) {
   let funcs = [];
   let result = this.replace(/\{([^\}]*)\}/g, prop => {

@@ -1,3 +1,4 @@
-{import('welcome.md')}
-{import('aboutUs.md')}
-{import('products.md')}
+{import('bodySkeleton.html')}
+{import('welcomePage.md')}
+{import('aboutUsPage.md')}
+{import('productsPage.md')}

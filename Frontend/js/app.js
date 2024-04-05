@@ -4,16 +4,16 @@ import { $ } from './jQueryish.js';
 import { fetchEasy } from './fetchEasy.js';
 
 // Read content
-const htmlSkeleton =
-  await fetchEasy('/content/bodySkeleton.html');
-const content =
-  (await fetchEasy('/content/_content.md')).splitHtml(1);
+const allContent = await fetchEasy('/content/_content.md');
+const bodySkeleton = allContent.extractHtml('#bodySkeleton');
+const pages = allContent.extractHtml('[id$="Page"]');
+const menuItems = pages.join('').extractHtml('h1');
 
 // Extract the h1:s as menu items
-const menuItems = content.map(x => x.slice(4).split('<')[0]);
+
 
 // Add initial html for the site
-$('body').html(htmlSkeleton.revive({
+$('body').html(bodySkeleton.revive({
   menu:
     menuItems.map((item, index) => /*html*/`
       <a href="/${index === 0 ? '' : item.kebabCase()}">${item}</a>
@@ -38,8 +38,8 @@ function showView() {
   let index = menuItems.findIndex(x => '/' + x.kebabCase() === route);
   // If not found set the index to 0 (the first item)
   index = index < 0 ? 0 : index;
-  // Replace the content in the main element
-  $('main article').html(content[index]);
+  // Replace the pages in the main element
+  $('main article').html(pages[index]);
   // Add the css class 'active' to the active menu item
   $('nav a').removeClass('active').eq(index).addClass('active');
 }

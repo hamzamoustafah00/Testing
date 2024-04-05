@@ -8,5 +8,8 @@ export async function fetchEasy(url, options = {}) {
     import: async url =>
       await fetchEasy(url.includes('/') ? url : '/content/' + url)
   }, true).wait());
+  if (url.endsWith('.md') || url.endsWith('.html')) {
+    result = `<div id="${url.split('/').pop().split('.')[0]}">\n${result}\n</div>`;
+  }
   return result;
 }
