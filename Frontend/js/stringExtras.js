@@ -17,12 +17,12 @@ String.prototype.extractHtml = function (cssSelector) {
   return extracted.length <= 1 ? extracted[0] : extracted;
 }
 
-// Replace {propName} in an html string 
+// Replace {propName} instances in an html string 
 // with property values from an object
-// + if a property is a function we call it
-// + if async = true, we can wait for async functions:
-//   await "some string".revive(data,true).wait()
-String.prototype.revive = function (data = {}, async = false) {
+// + if a property is a function you can call it
+// + you can wait for async function calls to resolve:
+//   await "some string".revive(data).wait()
+String.prototype.hydrate = function (data = {}) {
   let funcs = [];
   let result = this.replace(/\{([^\}]*)\}/g, prop => {
     prop = prop.slice(1, -1)
@@ -34,17 +34,16 @@ String.prototype.revive = function (data = {}, async = false) {
     return '__result__' + (funcs.length - 1);
   });
   let funcResults = funcs.map(x => x(data));
-  let resolver = () => result.replace(/__result__\d{1,}/g, x =>
-    funcResults[+x.split('_').pop()]);
-  if (!async) { return resolver(); }
-  else {
-    let s = new String(result);
-    s.wait = async () => {
-      for (let i = 0; i < funcResults.length; i++) {
-        funcResults[i] = await funcResults[i];
-      }
-      return resolver();
+  let resolver = () => result.replace(/__result__\d{1,}/g, x => {
+    var i = +x.split('_').pop();
+    return funcResults[i] instanceof Promise ? x : funcResults[i];
+  });
+  let s = new String(resolver());
+  s.wait = async () => {
+    for (let i = 0; i < funcResults.length; i++) {
+      funcResults[i] = await funcResults[i];
     }
-    return s;
+    return resolver();
   }
+  return s;
 }

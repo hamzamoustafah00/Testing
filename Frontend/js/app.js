@@ -3,25 +3,26 @@ import './stringExtras.js';
 import { $ } from './jQueryish.js';
 import { fetchEasy } from './fetchEasy.js';
 
-// Read content
-const allContent = await fetchEasy('/content/_content.md');
-const bodySkeleton = allContent.extractHtml('#bodySkeleton');
-const pages = allContent.extractHtml('[id$="Page"]');
+// Read and parse the content
+const content = await fetchEasy('/content/_content.md');
+const bodySkeleton = content.extractHtml('#bodySkeleton');
+const pages = content.extractHtml('[id$="Page"]');
+const page404 = content.extractHtml('#page404');
 const menuItems = pages.join('').extractHtml('h1');
 
-// Extract the h1:s as menu items
-
-
 // Add initial html for the site
-$('body').html(bodySkeleton.revive({
+$('body').html(bodySkeleton.hydrate({
   menu:
     menuItems.map((item, index) => /*html*/`
-      <a href="/${index === 0 ? '' : item.kebabCase()}">${item}</a>
+      <a href="/${index === 0 ? '' : item.kebabCase()}">
+        ${item}
+      </a>
     `).join('')
 }));
 
-// When we click somewhere - check if the click
-// is on an a tag with an internal link
+// When we click on an internal link
+// don't reload the page - instead use pushState
+// and call showView
 $('a[href^="/"]').click((el, event) => {
   // Prevent the default behavior on click on an a tag 
   // (which is a hard page reload)
@@ -35,11 +36,10 @@ $('a[href^="/"]').click((el, event) => {
 function showView() {
   let route = location.pathname;
   // Find the corresponding menuItem index number to the href
-  let index = menuItems.findIndex(x => '/' + x.kebabCase() === route);
-  // If not found set the index to 0 (the first item)
-  index = index < 0 ? 0 : index;
+  let index = route === '/' ? 0 :
+    menuItems.findIndex(x => '/' + x.kebabCase() === route);
   // Replace the pages in the main element
-  $('main article').html(pages[index]);
+  $('main article').html(pages[index] || page404);
   // Add the css class 'active' to the active menu item
   $('nav a').removeClass('active').eq(index).addClass('active');
 }
@@ -47,5 +47,5 @@ function showView() {
 // Listen to the back/forward buttons - change view based on url
 window.addEventListener('popstate', () => showView());
 
-// Show the first view after hard page load/reload
+// Show the first view after a hard page load/reload
 showView();
