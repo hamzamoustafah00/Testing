@@ -38,9 +38,25 @@ public static class FileServer
             }
         });
 
+        // Serve static frontend files
         app.UseFileServer(new FileServerOptions
         {
             FileProvider = new PhysicalFileProvider(path)
+        });
+
+        // Get a list of files from a subfolder in the frontend
+        app.MapGet("/api/files/{folder}", (HttpContext context, string folder) =>
+        {
+            object result;
+            try
+            {
+                result = Directory.GetFiles(
+                    Path.Combine(path, folder))
+                    .Select(x => x.Split('/').ToList().Last())
+                    .Where(x => CheckAcl.Allow(context, "GET", "/content/" + x));
+            }
+            catch (Exception) { result = new { error = "No such content." }; }
+            return result;
         });
     }
 }

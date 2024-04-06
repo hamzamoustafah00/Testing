@@ -34,13 +34,15 @@ public static class CheckAcl
         rules = allRules;
     }
 
-    public static bool Allow(HttpContext context)
+    public static bool Allow(
+        HttpContext context, string method = "", string path = ""
+    )
     {
         if (!on) { return true; }
 
         // Get info about the requested route and logged in user
-        var method = context.Request.Method;
-        var path = context.Request.Path;
+        method = method != "" ? method : context.Request.Method;
+        path = path != "" ? path : context.Request.Path;
         var user = Session.Get(context, "user");
         var userRole = user.GetStr("role").Replace("[undefined]", "visitor");
         var userEmail = user.GetStr("email").Replace("[undefined]", "");
