@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace ExtensionMethods
 {
@@ -25,5 +26,18 @@ namespace ExtensionMethods
         {
             return Array.IndexOf(strArray, find);
         }
+    }
+
+    // Instead of DynObject extend objects? (Maybe - this is a quick test...)
+    public static class ObjectUtils
+    {
+
+        public static object? GetObj(this object obj, string prop)
+        {
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(obj);
+            PropertyDescriptor desc = properties.Find(prop, false)!;
+            return desc != null ? desc.GetValue(obj)! : null;
+        }
+
     }
 }
