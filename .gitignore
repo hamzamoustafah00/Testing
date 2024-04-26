@@ -2,3 +2,4 @@
 bin
 obj
 Backend/_db.sqlite3
+Dyndata
