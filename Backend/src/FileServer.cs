@@ -1,4 +1,4 @@
-using Microsoft.Extensions.FileProviders;
+namespace Backend;
 
 public static class FileServer
 {

@@ -1,4 +1,4 @@
-using BCryptNet = BCrypt.Net.BCrypt;
+namespace Backend;
 
 static class Password
 {

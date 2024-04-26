@@ -1,5 +1,4 @@
-using System.Diagnostics;
-using Microsoft.Data.Sqlite;
+namespace Backend;
 
 public static class SQLQuery
 {

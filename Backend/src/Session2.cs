@@ -1,4 +1,4 @@
-
+namespace Backend;
 public static partial class Session
 {
     private static bool deleteLoopStarted = false;

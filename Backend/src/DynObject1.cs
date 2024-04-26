@@ -1,3 +1,5 @@
+namespace Backend;
+
 public partial class DynObject : Dictionary<string, dynamic>
 {
     protected void init(object initDict)

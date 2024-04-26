@@ -1,3 +1,4 @@
+namespace Backend;
 
 public static partial class Session
 {

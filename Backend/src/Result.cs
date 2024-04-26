@@ -1,3 +1,5 @@
+namespace Backend;
+
 public static class Result
 {
     private static DynObject rowModifier(DynObject row)

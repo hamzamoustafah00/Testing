@@ -1,3 +1,5 @@
+namespace Backend; 
+
 public partial class DynObject
 {
     public bool HasKey(string key)

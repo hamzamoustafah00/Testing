@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Diagnostics;
+namespace Backend;
 
 public static class ErrorHandler
 {
