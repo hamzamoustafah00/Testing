@@ -16,3 +16,4 @@ global using static Dyndata.Factory;
 
 global using Backend;
 global using ExtensionMethods;
+global using static Backend.SQLQueryNew;
