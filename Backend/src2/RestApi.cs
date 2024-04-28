@@ -34,7 +34,8 @@ public static class RestApi
         App.MapGet("/api/{table}/{id}", (string table, string id) =>
             RestResult.Parse(SQLQueryOne(
                 $"SELECT * FROM {table} WHERE id = $id",
-                ReqBodyParse(table, Obj(new { id })).body
+                ReqBodyParse(Obj(new { id })),
+                context
             ))
         );
 
