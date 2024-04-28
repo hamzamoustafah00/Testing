@@ -19,4 +19,14 @@ public static class Shared
         get { return _app!; }
         set { _app = value; }
     }
+
+    // Now - time now as unix timestamp in milliseconds
+    public static long Now
+    {
+        get
+        {
+            DateTimeOffset dto = new DateTimeOffset(DateTime.UtcNow);
+            return dto.ToUnixTimeMilliseconds();
+        }
+    }
 }

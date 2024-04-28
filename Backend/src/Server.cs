@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace WebApp;
 public static class Server
 {
@@ -5,8 +7,9 @@ public static class Server
     {
         var builder = WebApplication.CreateBuilder();
         App = builder.Build();
-        Acl.Start();
         Middleware();
+        DebugLog.Start();
+        Acl.Start();
         ErrorHandler.Start();
         FileServer.Start();
         LoginRoutes.Start();
@@ -14,18 +17,20 @@ public static class Server
         Session.Start();
         // Start the server on port 3001
         var runUrl = "http://localhost:" + Globals.port;
-        Log("Running on:", runUrl);
+        Log("Server running on:", runUrl);
         Log("With these settings:", Globals);
         App.Run(runUrl);
     }
 
     // A basic middleware that changes the server response header,
-    // keep sessions alive and stop routes that Acl does not approve
+    // initiates the debug logging for the request,
+    // keep sessions alive and stop a route if acl does not approve of it
     public static void Middleware()
     {
         App.Use(async (context, next) =>
         {
             context.Response.Headers.Append("Server", (string)Globals.serverName);
+            DebugLog.Register(context);
             Session.Touch(context);
             if (!Acl.Allow(context))
             {
@@ -35,6 +40,7 @@ public static class Server
                 await context.Response.WriteAsJsonAsync(new { error });
             }
             else { await next(context); }
+            DebugLog.Add(context, new { statusCode = context.Response.StatusCode });
         });
     }
 }

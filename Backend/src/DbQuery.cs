@@ -1,43 +1,42 @@
-namespace Backend;
-
-public static partial class SQLQueryNew
+namespace WebApp;
+public static class DbQuery
 {
-
-    [GeneratedRegex(@"^\d{1,}$")]
-    private static partial Regex MatchInt();
-
-    [GeneratedRegex(@"^[\d\.]{1,}$")]
-    private static partial Regex MatchDouble();
-
+    // Setup the database connection
     private static SqliteConnection db =
         new SqliteConnection("Data Source=_db.sqlite3");
 
-    static SQLQueryNew() { db.Open(); }
+    static DbQuery() { db.Open(); }
 
+    // Helper to create an object from the DataReader
     private static dynamic ObjFromReader(SqliteDataReader reader)
     {
         var obj = Obj();
         for (var i = 0; i < reader.FieldCount; i++)
         {
             var key = reader.GetName(i);
-            var str = reader.GetString(i);
-            object value =
-                MatchInt().IsMatch(str) ? reader.GetInt64(i) :
-                MatchDouble().IsMatch(str) ? reader.GetDouble(i) :
-                str;
-            obj[key] = value;
+            obj[key] = reader.GetString(i).TryToNum();
         }
         return obj;
     }
 
-    public static Arr SQLQuery(string sql, object parameters = null!)
+    // Run a query - rows are returned as an arry of objects
+    public static Arr SQLQuery(
+        string sql, object parameters = null, HttpContext context = null
+    )
     {
         var paras = parameters == null ? Obj() : Obj(parameters);
         var command = db.CreateCommand();
         command.CommandText = @sql;
         var entries = (Arr)paras.GetEntries();
         entries.ForEach(x => command.Parameters.AddWithValue(x[0], x[1]));
-        Log(new { SQL = sql, parameters = paras });
+        if (context != null)
+        {
+            DebugLog.Add(context, new
+            {
+                sqlQuery = sql.Regplace(@"\s+", " "),
+                sqlParams = paras
+            });
+        }
         var rows = Arr();
         try
         {
@@ -65,8 +64,11 @@ public static partial class SQLQueryNew
         return rows;
     }
 
-    public static dynamic SQLQueryOne(string sql, object parameters = null!)
+    // Run a query - only return the first row, as an object
+    public static dynamic SQLQueryOne(
+        string sql, object parameters = null, HttpContext context = null
+    )
     {
-        return SQLQuery(sql, parameters)[0];
+        return SQLQuery(sql, parameters, context)[0];
     }
 }

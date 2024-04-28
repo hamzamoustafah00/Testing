@@ -51,9 +51,6 @@ public static class Acl
 
             // Check if role, method and path is allowed according to the rule
             var roleOk = ruleRoles.Includes(userRole);
-
-            Log("include", ruleRoles.Includes(userRole), "some", ruleRoles.Some(x => x == userRole));
-
             var methodOk = method == ruleMethod || ruleMethod == "*";
             var pathOk = Regex.IsMatch(path + "/", ruleRegexPattern);
             // Note: "match" can be false - in that case we negate pathOk!
@@ -66,12 +63,9 @@ public static class Acl
             // and then we blacklist on top of that (check all disallow rules)
             allowed = ruleAllow ? allowed || allOk : allOk ? false : allowed;
         }
+        var toLog = Obj(new { userRole, userEmail, aclAllowed = allowed });
+        if (userEmail == "") { toLog.Delete("userEmail"); }
+        DebugLog.Add(context, toLog);
         return allowed;
-        /*var userLabel = userEmail != "" ? "the user" : "the anonymous visitor";
-        userEmail = userEmail != "" ? "'" + userEmail + "' " : "";
-        Debug.Log(
-            "acl", $"  ACL: {allowed} for {userLabel}"
-            + $" {userEmail}with the role '{userRole}'.");
-        return allowed;*/
     }
 }

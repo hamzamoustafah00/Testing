@@ -5,7 +5,7 @@ public static class ErrorHandler
 {
     public static void Start()
     {
-        App.UseExceptionHandler((exceptionApp) =>
+        App.UseExceptionHandler(exceptionApp =>
         {
             exceptionApp.Run(async context =>
             {
