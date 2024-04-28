@@ -37,6 +37,7 @@ public static class CheckAcl
         HttpContext context, string method = "", string path = ""
     )
     {
+        return true; // turn it off!!!
         if (!on) { return true; }
 
         // Get info about the requested route and logged in user

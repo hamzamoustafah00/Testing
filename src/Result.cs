@@ -2,7 +2,7 @@ namespace Backend;
 
 public static class Result
 {
-    private static DynObject rowModifier(DynObject row)
+    private static Obj RowModifier(dynamic row)
     {
         // If null then change the result to error Not Found
         row = row != null ? row :
@@ -12,28 +12,23 @@ public static class Result
         // JSON.parse all fields called "data"
         if (row.HasKey("data"))
         {
-            row.Set("data", JSON.Parse(row.GetStr("data")));
+            row.data = JSON.Parse(row.data);
         }
         return row;
     }
 
-    public static IResult encode(object result)
+    public static IResult encode(dynamic result)
     {
         int statusCode = 200;
 
-        // The result is a list
-        if (result is List<DynObject>)
+        if (result is Arr arr)
         {
-            var r = (List<DynObject>)result;
-            result = r.Select(x => rowModifier(x));
+            result = arr.Map(x => RowModifier(x));
         }
-
-        // The results is a single row/object or an error object
         else
         {
-            DynObject r = result == null ? null! : new DynObject(result);
-
-            // 500 = Internal Srver Error
+            dynamic r = result == null ? null! : Obj(result);
+            // 500 = Internal Server Error
             // 404 = Not found
             // 200 = OK
             statusCode =
@@ -42,7 +37,7 @@ public static class Result
                 r.HasKey("rowsAffected") && r.GetInt("rowsAffected") == 0 ? 404 :
                 200;
 
-            result = rowModifier(r);
+            result = RowModifier(r);
         }
 
         return Results.Text(

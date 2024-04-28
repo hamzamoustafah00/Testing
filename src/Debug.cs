@@ -6,6 +6,7 @@ public static class Debug
 
     public static void Log(string type, object data)
     {
+        return;
         if (!on) { return; }
 
         if (type == "route")

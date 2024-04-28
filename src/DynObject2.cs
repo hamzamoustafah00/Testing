@@ -1,4 +1,4 @@
-namespace Backend; 
+namespace Backend;
 
 public partial class DynObject
 {
@@ -51,6 +51,6 @@ public partial class DynObject
 
     public override string ToString()
     {
-        return JSON.StringifyIndented(this);
+        return JSON.Stringify(this);
     }
 }

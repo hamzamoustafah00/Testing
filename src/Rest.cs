@@ -46,7 +46,7 @@ public static class Rest
                 q["where"]!, q["orderby"]!, q["limit"]!, q["offset"]!
             );
             sql += extras.sql;
-            return Result.encode(SQLQuery.All(sql, extras.parameterArr!));
+            return Result.encode(SQLQuery.All(sql));
         });
 
         app.MapGet("/api/{table}/{id}", (string table, string id) =>

@@ -3,62 +3,54 @@ namespace Backend;
 public class RestExtras
 {
     public string sql = "";
-    public object[]? parameterArr;
+    public Obj paramObj;
 
     // Provide a subset of WHERE functionality + use of ORDER BY, LIMIT and OFFSET
     // from url query parameters in the get api routes
     public RestExtras(string where, string orderby, string limit, string offset)
     {
-        var parameters = new List<object>();
-
+        var parameters = Obj();
         if (where != null)
         {
             // Split by operators (but keep them) so that we get
             // an array like this:
             // ["firstName","=","Maria","AND","lastName","!=","Smith"]
-            string[] ops1 = { "!=", ">=", "<=", "=", ">", "<", "_AND_", "_OR_", "AND", "OR" };
-            string[] ops2 = { "!=", ">=", "<=", "=", ">", "<", "AND", "OR", "AND", "OR" };
+            var ops1 = Arr("!=", ">=", "<=", "=", ">", "<", "_AND_", "_OR_", "AND", "OR");
+            var ops2 = Arr("!=", ">=", "<=", "=", ">", "<", "AND", "OR", "AND", "OR");
             foreach (var op in ops1)
             {
-                where = where.Split(op).Join($"_-_{ops1.IndexOf(op)}_-_");
+                where = Arr(where.Split(op)).Join($"_-_{ops1.IndexOf(op)}_-_");
             }
-            var parts = where.Split("_-_")
-                .Select((x, i) => i % 2 == 0 ? x : ops2[Int32.Parse(x)])
-                .ToArray();
+            var parts = Arr(where.Split("_-_")).Map((x, i) => i % 2 == 0 ? x : ops2[x]);
             // Now we should have AND or OR on every 4:th place (n%4 = 3)
             // otherwise the syntax is incorrect!
             var i = 0;
             var faulty = parts
-                .Any(x => i++ % 4 == 3 ? x != "AND" && x != "OR" : false);
+                .Some(x => i++ % 4 == 3 ? x != "AND" && x != "OR" : false);
             if (!faulty)
             {
                 // We have keys on every n%4 = 0 place, collect those
                 // and clean them so they only have safe characters
-                var keys = new Queue<string>(parts
-                    .Where((x, i) => i % 4 == 0)
-                    .Select(x => x.Regplace(@"[^A-Za-z0-9_\-,]", ""))
-                    .ToList());
+                var keys = parts
+                    .Filter((x, i) => i % 4 == 0)
+                    .Map(x => x.Regplace(@"[^A-Za-z0-9_\-,]", ""));
                 // We have values on every n%4 = 2 place, collect those
-                var values = new Queue<string>(parts
-                    .Where((x, i) => i % 4 == 2).ToList());
+                var values = parts.Filter((x, i) => i % 4 == 2);
                 // And operators on every n%2 = 1 place, collect those
-                var operators = new Queue<string>(parts
-                    .Where((x, i) => i % 2 == 1).ToList());
-
+                var operators = parts.Filter((x, i) => i % 2 == 1);
                 // Now build the sql for where and the parameter array
                 var sqlWhere = "";
-                while (values.Count() > 0)
+                while (values.Length > 0)
                 {
-                    var key = keys.Dequeue();
-                    string val = values.Dequeue();
+                    var key = keys.Shift();
+                    var val = (string)values.Shift();
                     object value =
-                        val.Match(@"^\d{1,}$") ? Int64.Parse(val + "") :
-                        val.Match(@"^[\d\.]{1,}$") ? Double.Parse(val + "") :
+                        val.Match(@"^\d{1,}$") ? Int64.Parse(val) :
+                        val.Match(@"^[\d\.]{1,}$") ? Double.Parse(val) :
                         val;
-                    sqlWhere += $"{key} {operators.Dequeue()} ${key}";
-                    sqlWhere += operators.Count() == 0 ? "" : $" {operators.Dequeue()} ";
-                    parameters.Add(key);
-                    parameters.Add(value);
+                    sqlWhere += $"{key} {operators.Shift()} ${key}";
+                    sqlWhere += operators.Length == 0 ? "" : $" {operators.Shift()} ";
+                    parameters[key] = value;
                 }
 
                 sql += " WHERE " + sqlWhere;
@@ -68,13 +60,10 @@ public class RestExtras
         // Sanitize orderby and change -field to field DESC
         if (orderby != null)
         {
-            orderby = orderby
-                .Regplace(@"[^A-Za-z0-9_\-,]", "")
-                .Split(",")
-                .Select(x => x.Regplace(@"\+", "")
-                    .Regplace(@"^\-(.*)", "$1 DESC")
-                    .Regplace(@"\-", "")
-                ).ToArray().Join(", ");
+            orderby = Arr(orderby.Regplace(@"[^A-Za-z0-9_\-,]", "").Split(","))
+                .Map(x => ((string)x)
+                    .Regplace(@"\+", "").Regplace(@"^\-(.*)", "$1 DESC")
+                    .Regplace(@"\-", "")).Join(",");
             sql += " ORDER BY " + orderby;
         }
 
@@ -92,6 +81,6 @@ public class RestExtras
             sql += " OFFSET " + offset;
         }
 
-        parameterArr = parameters.ToArray();
+        paramObj = parameters;
     }
 }

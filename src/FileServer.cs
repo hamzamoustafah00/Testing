@@ -38,7 +38,7 @@ public static class FileServer
             }
         });
 
-        // Serve static frontend files
+        // Serve static frontend files (middleware)
         app.UseFileServer(new FileServerOptions
         {
             FileProvider = new PhysicalFileProvider(path)
@@ -50,12 +50,11 @@ public static class FileServer
             object result;
             try
             {
-                result = Directory.GetFiles(
-                    Path.Combine(path, folder))
-                    .Select(x => x.Split('/').ToList().Last())
-                    .Where(x => CheckAcl.Allow(context, "GET", "/content/" + x));
+                result = Arr(Directory.GetFiles(Path.Combine(path, folder)))
+                .Map(x => Arr(x.Split('/')).Pop())
+                .Filter(x => CheckAcl.Allow(context, "GET", "/content/" + x));
             }
-            catch (Exception) { result = new { error = "No such content." }; }
+            catch (Exception e) { result = new { e, error = "No such content." }; }
             return result;
         });
     }
