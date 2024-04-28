@@ -14,25 +14,20 @@ public static class DbQuery
         for (var i = 0; i < reader.FieldCount; i++)
         {
             var key = reader.GetName(i);
-            var str = reader.GetString(i);
-            object value =
-                IsInt(str) ? reader.GetInt64(i) :
-                IsDouble(str) ? reader.GetDouble(i) :
-                str;
-            obj[key] = value;
+            obj[key] = reader.GetString(i).TryToNum();
         }
         return obj;
     }
 
     // Run a query - rows are returned as an arry of objects
-    public static Arr SQLQuery(string sql, object parameters = null!)
+    public static Arr SQLQuery(string sql, object parameters = null)
     {
         var paras = parameters == null ? Obj() : Obj(parameters);
         var command = db.CreateCommand();
         command.CommandText = @sql;
         var entries = (Arr)paras.GetEntries();
         entries.ForEach(x => command.Parameters.AddWithValue(x[0], x[1]));
-        Log(new { SQL = sql, parameters = paras });
+        // Log(new { SQL = sql.Regplace(@"\s+", " "), parameters = paras });
         var rows = Arr();
         try
         {
@@ -61,7 +56,7 @@ public static class DbQuery
     }
 
     // Run a query - only return the first row, as an object
-    public static dynamic SQLQueryOne(string sql, object parameters = null!)
+    public static dynamic SQLQueryOne(string sql, object parameters = null)
     {
         return SQLQuery(sql, parameters)[0];
     }

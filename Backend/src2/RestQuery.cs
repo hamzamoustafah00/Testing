@@ -21,7 +21,6 @@ public static class RestQuery
             {
                 where = Arr(where.Split(op)).Join($"_-_{ops1.IndexOf(op)}_-_");
             }
-            Log("HOHO", Arr(where.Split("_-_")));
             var parts = Arr(where.Split("_-_"))
                 .Map((x, i) => i % 2 == 0 ? x : ops2[((string)x).ToInt()]);
             // Now we should have AND or OR on every 4:th place (n%4 = 3)
@@ -45,11 +44,7 @@ public static class RestQuery
                 while (values.Length > 0)
                 {
                     var key = (string)keys.Shift();
-                    var val = (string)values.Shift();
-                    object value =
-                        IsInt(val) ? Int64.Parse(val) :
-                        IsDouble(val) ? Double.Parse(val) :
-                        val;
+                    var value = values.Shift().TryToNumber();
                     sqlWhere += $"{key} {operators.Shift()} ${key}";
                     sqlWhere += operators.Length == 0 ? "" : $" {operators.Shift()} ";
                     parameters[key] = value;

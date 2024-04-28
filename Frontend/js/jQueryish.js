@@ -63,7 +63,7 @@ function addManipulationMethods(elements) {
 }
 
 // Simplify delegated eventhandling
-// so we can do: $$('div').click(e => alert('I am a div'));
+// so we can do: $('div').click(e => alert('I am a div'));
 
 const eventTypes = Object.getOwnPropertyNames(window)
   .filter(x => x.slice(0, 2) === 'on')

@@ -10,7 +10,7 @@ var app = builder.Build();
 // Middleware: Set the server name response header 
 // and touch the user session with a new timestamp
 // and apply ACL rules to check if access is allowd
-/*app.Use(async (context, next) =>
+app.Use(async (context, next) =>
 {
     context.Response.Headers.Append("Server", serverName);
     Debug.Log("route", context);
@@ -24,7 +24,7 @@ var app = builder.Build();
             new { error = "Not allowed." }
         );
     }
-});*/
+});
 
 // Set up routes, error handling, ACL and session purging
 ErrorHandler.Start(app, serverName);

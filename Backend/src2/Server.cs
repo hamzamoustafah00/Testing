@@ -5,18 +5,36 @@ public static class Server
     {
         var builder = WebApplication.CreateBuilder();
         App = builder.Build();
-        // Set up routes, error handling, ACL and session purging
-        /*ErrorHandler.Start(app, serverName);
-        FileServer.Start(app, isSpa, "..", "Frontend");
-        LoginRoutes.Start(app);
-        RestNew.Start(app);
-        CheckAcl.Start();*/
-        //Session.DeleteOldSessions(2);
-
+        Acl.Start();
+        Middleware();
+        ErrorHandler.Start();
         FileServer.Start();
+        LoginRoutes.Start();
         RestApi.Start();
-
+        Session.Start();
         // Start the server on port 3001
-        App.Run("http://localhost:" + Globals.port);
+        var runUrl = "http://localhost:" + Globals.port;
+        Log("Running on:", runUrl);
+        Log("With these settings:", Globals);
+        App.Run(runUrl);
+    }
+
+    // A basic middleware that changes the server response header,
+    // keep sessions alive and stop routes that Acl does not approve
+    public static void Middleware()
+    {
+        App.Use(async (context, next) =>
+        {
+            context.Response.Headers.Append("Server", (string)Globals.serverName);
+            Session.Touch(context);
+            if (!Acl.Allow(context))
+            {
+                // Acl says the route is not allowed
+                context.Response.StatusCode = 405;
+                var error = "Not allowed.";
+                await context.Response.WriteAsJsonAsync(new { error });
+            }
+            else { await next(context); }
+        });
     }
 }
