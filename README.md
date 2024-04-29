@@ -45,9 +45,8 @@ An example:
 * Note: Don't surround strings with quotes, as you can see in the example above we don't.
 
 ##### Currently supported operators for where
-*  !=, >=, <=, =, >, <, _AND_", "_OR_"
-*  No parenthesis supported.
-*  LIKE not supported (but I'm thinking about adding it).
+*  !=, >=, <=, =, >, <, _AND_, _OR_, _LIKE_  (writing the latter three with underscores are optional but improves readability)
+*  Parentheses are currently not supported.
 
 ### SQL Injections? Are we safe against them?
 * Everything that we can move to parameters in prepared statement are parameters in prepared statements. The Debugger shows the SQL that is generated for a particular route, including the parameters!

@@ -15,8 +15,10 @@ public static class RestQuery
             // Split by operators (but keep them) so that we get
             // an array like this:
             // ["firstName","=","Maria","AND","lastName","!=","Smith"]
-            var ops1 = Arr("!=", ">=", "<=", "=", ">", "<", "_AND_", "_OR_", "AND", "OR");
-            var ops2 = Arr("!=", ">=", "<=", "=", ">", "<", "AND", "OR", "AND", "OR");
+            // ops1 = operators ok to write in query, thus you can write _AND_ if yo want to for clearity
+            // ops2 = the operators we actually translate to...
+            var ops1 = Arr("!=", ">=", "<=", "=", ">", "<", "_LIKE_", "_AND_", "_OR_", "LIKE", "AND", "OR");
+            var ops2 = Arr("!=", ">=", "<=", "=", ">", "<", "LIKE", "AND", "OR", "LIKE", "AND", "OR");
             foreach (var op in ops1)
             {
                 where = Arr(where.Split(op)).Join($"_-_{ops1.IndexOf(op)}_-_");
