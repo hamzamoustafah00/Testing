@@ -40,6 +40,8 @@ public static class Acl
 
         // Go through all acl rules to and set allowed accordingly!
         var allowed = false;
+        Obj appliedAllowRule = null;
+        Obj appliedDisallowRule = null;
         foreach (var rule in rules)
         {
             // Get the properties of the rule as variables
@@ -61,11 +63,27 @@ public static class Acl
 
             // Note: We whitelist first (check all allow rules) - ORDER BY allow
             // and then we blacklist on top of that (check all disallow rules)
+            var oldAllowed = allowed;
             allowed = ruleAllow ? allowed || allOk : allOk ? false : allowed;
+            if (oldAllowed != allowed)
+            {
+                if (ruleAllow) { appliedAllowRule = rule; }
+                else { appliedDisallowRule = rule; }
+            }
         }
+        // Info to debug log
         var toLog = Obj(new { userRole, userEmail, aclAllowed = allowed });
+        if (appliedAllowRule != null)
+        {
+            toLog.aclAppliedAllowRule = appliedAllowRule;
+        }
+        if (appliedDisallowRule != null)
+        {
+            toLog.aclAppliedDisallowRule = appliedDisallowRule;
+        }
         if (userEmail == "") { toLog.Delete("userEmail"); }
         DebugLog.Add(context, toLog);
+        // Return if allowed or not
         return allowed;
     }
 }

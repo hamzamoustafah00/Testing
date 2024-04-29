@@ -9,6 +9,11 @@ public static class RequestBodyParser
         var cleaned = Obj();
         body.GetKeys().ForEach(key
             => cleaned[key] = ((object)(body[key])).TryToNumber());
+        // Always encrypt fields named "password"
+        if (cleaned.HasKey("password"))
+        {
+            cleaned.password = Password.Encrypt(cleaned.password + "");
+        }
         // Return parts to use when building the SQL query + the cleaned body
         return Obj(new
         {
