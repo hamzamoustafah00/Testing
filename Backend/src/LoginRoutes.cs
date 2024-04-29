@@ -17,7 +17,7 @@ public static class LoginRoutes
             if (user != null)
             {
                 var already = new { error = "A user is already logged in." };
-                return RestResult.Parse(already);
+                return RestResult.Parse(context, already);
             }
 
             // Find the user in the DB
@@ -27,7 +27,7 @@ public static class LoginRoutes
             );
             if (dbUser == null)
             {
-                return RestResult.Parse(new { error = "No such user." });
+                return RestResult.Parse(context, new { error = "No such user." });
             }
 
             // If the password doesn't match
@@ -36,7 +36,7 @@ public static class LoginRoutes
                 (string)dbUser.password
             ))
             {
-                return RestResult.Parse(
+                return RestResult.Parse(context,
                     new { error = "Password mismatch." });
             }
 
@@ -45,13 +45,13 @@ public static class LoginRoutes
             Session.Set(context, "user", dbUser);
 
             // Return the user
-            return RestResult.Parse(dbUser!);
+            return RestResult.Parse(context, dbUser!);
         });
 
         App.MapGet("/api/login", (HttpContext context) =>
         {
             var user = GetUser(context);
-            return RestResult.Parse(user != null ?
+            return RestResult.Parse(context, user != null ?
                 user : new { error = "No user is logged in." });
         });
 
@@ -62,7 +62,7 @@ public static class LoginRoutes
             // Delete the user from the session
             Session.Set(context, "user", null);
 
-            return RestResult.Parse(user == null ?
+            return RestResult.Parse(context, user == null ?
                 new { error = "No user is logged in." } :
                 new { status = "Successful logout." }
             );

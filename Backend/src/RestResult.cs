@@ -15,7 +15,7 @@ public static class RestResult
         return row;
     }
 
-    public static IResult Parse(dynamic result)
+    public static IResult Parse(HttpContext context, dynamic result)
     {
         int statusCode = 200;
 
@@ -37,12 +37,12 @@ public static class RestResult
 
             result = RowModifier(r);
         }
-        var toReturn = Results.Text(
+        if (statusCode != 200) { DebugLog.Add(context, result); }
+        return Results.Text(
           JSON.Stringify(result),
           "application/json; charset=utf-8",
           null,
           statusCode
         );
-        return toReturn;
     }
 }

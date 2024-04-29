@@ -10,6 +10,7 @@ public static class ErrorHandler
             exceptionApp.Run(async context =>
             {
                 var feature = context.Features.Get<IExceptionHandlerPathFeature>();
+                DebugLog.Add(context, new { error = feature.Error.Message });
                 var error = new { error = feature.Error.Message };
                 context.Response.Headers.Append("Server", (string)Globals.serverName);
                 await context.Response.WriteAsJsonAsync(error);

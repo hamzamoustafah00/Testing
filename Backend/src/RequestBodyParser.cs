@@ -14,7 +14,7 @@ public static class RequestBodyParser
         {
             insertColumns = keys.Join(","),
             insertValues = "$" + keys.Join(",$"),
-            update = keys.Map(key => $"${key}={key}").Join(","),
+            update = keys.Filter(key => key != "id").Map(key => $"{key}=${key}").Join(","),
             body = cleaned
         });
     }

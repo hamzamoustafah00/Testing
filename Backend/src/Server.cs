@@ -24,7 +24,8 @@ public static class Server
 
     // A basic middleware that changes the server response header,
     // initiates the debug logging for the request,
-    // keep sessions alive and stop a route if acl does not approve of it
+    // keep sessions alive and stop a route if acl does not approve of it,
+    // and adds info for debugging
     public static void Middleware()
     {
         App.Use(async (context, next) =>
@@ -40,7 +41,15 @@ public static class Server
                 await context.Response.WriteAsJsonAsync(new { error });
             }
             else { await next(context); }
-            DebugLog.Add(context, new { statusCode = context.Response.StatusCode });
+            var res = context.Response;
+            // Add info for debugging
+            string body = string.Empty;
+            DebugLog.Add(context, new
+            {
+                statusCode = res.StatusCode,
+                contentType = res.ContentType,
+                contentLength = res.ContentLength,
+            });
         });
     }
 }
