@@ -71,13 +71,13 @@ public static class Acl
                 else { appliedDisallowRule = rule; }
             }
         }
-        // Info to debug log
+        // Collect info for debug log
         var toLog = Obj(new { userRole, userEmail, aclAllowed = allowed });
-        if (appliedAllowRule != null)
+        if (Globals.detailedAclDebug && appliedAllowRule != null)
         {
             toLog.aclAppliedAllowRule = appliedAllowRule;
         }
-        if (appliedDisallowRule != null)
+        if (Globals.detailedAclDebug && appliedDisallowRule != null)
         {
             toLog.aclAppliedDisallowRule = appliedDisallowRule;
         }
