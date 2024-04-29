@@ -1,3 +1,5 @@
+## Basics
+
 ### After git clone, before you start the app!
 * Make a copy of DbTemplate/_db.sqlite3 to Backend/_db.sqlite3
 * Why? We don't want small changes (reading/writing data) to
@@ -13,6 +15,8 @@ To commit them to git:
 * Make a copy of Backend/_db.sqlite3 to DbTemplate/_db.sqlite3.
 * Commit to git!
 
+## About the REST-api
+
 ### Backend/src/App.cs
 This is the starting point. Here you can easily turn off ACL and/or the Debugger.
 
@@ -20,7 +24,7 @@ This is the starting point. Here you can easily turn off ACL and/or the Debugger
 Currently we have three users, one with admin rights, and all users have password "12345678".
 We recommend SQLiteStudio as a DB editor!
 
-### The Rest & RestExtras classes handle dynamic routing to all tables and views in the DB! 
+### Rest routes are dynamic - there will automatically be REST routes for all tables and views in the database!
 If you add a table or view in the DB, corresponding routes will be created automatically.
 
 **I say this once more:** YOU NORMALLY DON'T ADD ANY CODE IN ORDER TO CREATE NEW ROUTES. YOU ADD TABLES AND VIEWS IN THE DB!
@@ -87,3 +91,13 @@ The only api routes that are not governed by which tables and views you have in 
 ### Passwords
 * Passwords are BCrypted (with strength 13) and are removed from REST-api responses as well.
 * There are no restrictions as to how complex they have to be for now - but I'm thinking of adding a check for a minumum password entropy and/or demand a minumum length and that they are a mix of small and large letters, numbers and at least on other character.
+
+## Dependencies - Nuget packages
+The project has three dependencies, all specified in the **Backend.csjproj** file:
+* [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite) - a lightweight driver (ADO.NET provider) for SQLite - [read the documentation here](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli).
+* [BCrypt.Net-Next](https://www.nuget.org/packages/BCrypt.Net-Next) - a password hashing function - [read the documentation here](https://github.com/BcryptNet/bcrypt.net)
+* [Dyndata](https://www.nuget.org/packages/Dyndata) - for simplified handling of objects and lists/arrays (+ also has a nice logging and JSON functionality) - [read the documentation here](https://dyndata.nodehill.com)
+
+## Source code - an overview
+
+### GlobalUsings.cs
