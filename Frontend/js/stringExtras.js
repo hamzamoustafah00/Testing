@@ -2,11 +2,15 @@ import "./jQueryish.js";
 
 // Kebab case a string
 // after removing diacritics from chars
+// (for building url slugs)
 String.prototype.kebabCase = function () {
   return this.normalize("NFD")
+    .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replaceAll(' ', '-')
-    .toLowerCase();
+    .replaceAll('.', '-')
+    .toLowerCase()
+    .replace(/((?![a-z0-9\-]).)*/g, "")
 }
 
 // Extract html from a string based on a cssSelector

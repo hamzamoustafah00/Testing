@@ -42,18 +42,21 @@ public static class Server
                 await context.Response.WriteAsJsonAsync(error);
             }
             else { await next(context); }
+            // Add some extra info for debugging
             var res = context.Response;
-            // Add info for debugging
-            string body = string.Empty;
+            var contentLength = res.ContentLength;
+            contentLength = contentLength == null ? 0 : contentLength;
             var info = Obj(new
             {
                 statusCode = res.StatusCode,
                 contentType = res.ContentType,
-                contentLength = res.ContentLength,
+                contentLengthKB =
+                    Math.Round((double)contentLength / 10.24) / 100,
+                RESPONSE_DONE = Now
             });
-            if (info.contentLength == null)
+            if (info.contentLengthKB == null || info.contentLengthKB == 0)
             {
-                info.Delete("contentLength");
+                info.Delete("contentLengthKB");
             }
             DebugLog.Add(context, info);
         });

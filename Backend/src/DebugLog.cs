@@ -27,6 +27,7 @@ public static class DebugLog
         {
             time = DateTime.Now.ToString("yyyy-MM-dd HH\\:mm\\:ss"),
             timestamp = Now,
+            timeTakenMs = 0,
             route = context.Request.Method + " " + context.Request.Path.Value
         };
     }
@@ -36,12 +37,12 @@ public static class DebugLog
     {
         if (!Globals.debugOn) { return; }
         var id = GetId(context);
-        if (id == null && memory[id] == null) { return; }
+        if (id == null || memory[id] == null) { return; }
         memory[id] = Obj(new { ___ = memory[id], ___2 = info });
     }
 
-    // Write to console and clear from memory, after a 500 ms delay
-    // (the delay is so that all middleware have time to add info()
+    // Write to console and clear from memory, when the response
+    // is flagged as done (or after 5000 ms so that memory always clears)
     public static async void Write()
     {
         if (!Globals.debugOn) { return; }
@@ -50,8 +51,21 @@ public static class DebugLog
             memory.GetKeys().ForEach(key =>
             {
                 var item = memory[key];
-                if (item.timestamp + 500 < Now)
+                if (
+                    item.RESPONSE_DONE != null ||
+                    item.timestamp + 5000 < Now
+                )
                 {
+                    if (item.RESPONSE_DONE != null)
+                    {
+                        item.timeTakenMs =
+                            item.RESPONSE_DONE - item.timestamp;
+                        item.Delete("RESPONSE_DONE");
+                    }
+                    else
+                    {
+                        item.Delete("timeTaken");
+                    }
                     Log(item);
                     memory.Delete(key);
                 }

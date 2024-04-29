@@ -1,17 +1,23 @@
 namespace WebApp;
 public static class RestResult
 {
-    private static Obj RowModifier(dynamic row)
+    private static dynamic RowModifier(dynamic row)
     {
-        // If null then change the result to error Not Found
-        row ??= Obj(new { error = "Not found." });
-        // Delete fields named "password"
-        row.Delete("password");
-        // JSON.parse all fields named "data"
-        if (row.HasKey("data"))
+        // Try, because not all rows might be objects
+        // and otherwise this fails...
+        try
         {
-            row.data = JSON.Parse(row.data);
+            // If null then change the result to error Not Found
+            row ??= Obj(new { error = "Not found." });
+            // Delete fields named "password"
+            row.Delete("password");
+            // JSON.parse all fields named "data"
+            if (row.HasKey("data"))
+            {
+                row.data = JSON.Parse(row.data);
+            }
         }
+        catch (Exception) { }
         return row;
     }
 

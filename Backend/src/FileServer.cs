@@ -64,15 +64,15 @@ public static class FileServer
         // Get a list of files from a subfolder in the frontend
         App.MapGet("/api/files/{folder}", (HttpContext context, string folder) =>
         {
-            object result;
+            object result = null;
             try
             {
                 result = Arr(Directory.GetFiles(Path.Combine(FPath, folder)))
-                .Map(x => Arr(x.Split('/')).Pop());
-                //.Filter(x => CheckAcl.Allow(context, "GET", "/content/" + x));
+                    .Map(x => Arr(x.Split('/')).Pop())
+                    .Filter(x => Acl.Allow(context, "GET", "/content/" + x));
             }
-            catch (Exception e) { result = new { e, error = "No such content." }; }
-            return result;
+            catch (Exception) { }
+            return RestResult.Parse(context, result);
         });
     }
 }
