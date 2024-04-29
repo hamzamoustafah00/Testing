@@ -22,10 +22,10 @@ public static class Server
         App.Run(runUrl);
     }
 
-    // A basic middleware that changes the server response header,
+    // Middleware that changes the server response header,
     // initiates the debug logging for the request,
-    // keep sessions alive and stop a route if acl does not approve of it,
-    // and adds info for debugging
+    // keep sessions alive, stops the route if not acl approved
+    // and adds some info for debugging
     public static void Middleware()
     {
         App.Use(async (context, next) =>
@@ -37,19 +37,25 @@ public static class Server
             {
                 // Acl says the route is not allowed
                 context.Response.StatusCode = 405;
-                var error = "Not allowed.";
-                await context.Response.WriteAsJsonAsync(new { error });
+                var error = new { error = "Not allowed." };
+                DebugLog.Add(context, error);
+                await context.Response.WriteAsJsonAsync(error);
             }
             else { await next(context); }
             var res = context.Response;
             // Add info for debugging
             string body = string.Empty;
-            DebugLog.Add(context, new
+            var info = Obj(new
             {
                 statusCode = res.StatusCode,
                 contentType = res.ContentType,
                 contentLength = res.ContentLength,
             });
+            if (info.contentLength == null)
+            {
+                info.Delete("contentLength");
+            }
+            DebugLog.Add(context, info);
         });
     }
 }
