@@ -29,7 +29,7 @@ If you add a table or view in the DB, corresponding routes will be created autom
 
 **I say this once more:** YOU NORMALLY DON'T ADD ANY CODE IN ORDER TO CREATE NEW ROUTES. YOU ADD TABLES AND VIEWS IN THE DB!
 
-#### 5 standard routes per table
+#### Five standard routes per table
 Of course we have the bread and butter of all REST-api:s covered. For any table, replace tablename below with a tablename and the id with a specific id:
 * POST /api/tablename - with a request body in JSON format - create a new row in the table and get the insert id back.
 * GET /api/tablename - get all rows from the table as a JSON array of objects.
@@ -98,6 +98,6 @@ The project has three dependencies, all specified in the **Backend.csjproj** fil
 * [BCrypt.Net-Next](https://www.nuget.org/packages/BCrypt.Net-Next) - a password hashing function - [read the documentation here](https://github.com/BcryptNet/bcrypt.net)
 * [Dyndata](https://www.nuget.org/packages/Dyndata) - for simplified handling of objects and lists/arrays (+ also has a nice logging and JSON functionality) - [read the documentation here](https://dyndata.nodehill.com)
 
-## Source code - an overview
-
-### GlobalUsings.cs
+## Source code - an quick overview
+* The source code for the Backend is locatee in the Backend/src-folder and a large part of it is richly commented.
+* The source code for the Frontend (just a small SPA example - not connected to the REST-api in anyway yet) is located in the Frontend-folder.
