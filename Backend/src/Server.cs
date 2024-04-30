@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace WebApp;
 public static class Server
 {
