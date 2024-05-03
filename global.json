@@ -1,8 +1,4 @@
 {
-  "sdk": {
-    "version": "8.0.203",
-    "rollForward": "latestPatch"
-  },
   "scripts": {
     "unit-tests": "dotnet test --logger \"console;verbosity=detailed\""
   }
