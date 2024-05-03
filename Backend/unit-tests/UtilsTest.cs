@@ -1,4 +1,5 @@
 using Xunit;
+using Xunit.Abstractions;
 
 namespace WebApp;
 public class UtilsTest
@@ -6,6 +7,13 @@ public class UtilsTest
     // The following lines are needed to get 
     // output to the Console to work in xUnit tests!
     // (also needs the using Xunit.Abstractions)
+    private readonly ITestOutputHelper output;
+    public UtilsTest(ITestOutputHelper output)
+    {
+        this.output = output;
+    }
+
+
     [Fact]
     // A simple initial example
     public void TestSumInt()
@@ -31,11 +39,11 @@ public class UtilsTest
         var result = Utils.CreateMockUsers();
         // Assert that the CreateMockUsers only return
         // newly created users in the db
-        Log("The test expected that " + mockUsersNotInDb.Length + " users should be added.");
-        Log("And " + result.Length + " users were added.");
-        Log("The test also asserts that the users added " +
+        output.WriteLine($"The test expected that {mockUsersNotInDb.Length} users should be added.");
+        output.WriteLine($"And {result.Length} users were added.");
+        output.WriteLine("The test also asserts that the users added " +
             "are equivalent (the same) to the expected users!");
         Assert.Equivalent(mockUsersNotInDb, result);
-        Log("The test passed!");
+        output.WriteLine("The test passed!");
     }
 }
