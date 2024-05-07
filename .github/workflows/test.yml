@@ -40,9 +40,9 @@ name: .NET Core Desktop
 
 on:
   push:
-    branches: [ "feature-unit-test-play" ]
+    branches: [ "feature-unit-testing-play" ]
   pull_request:
-    branches: [ "feature-unit-test-play" ]
+    branches: [ "feature-unit-testing-play" ]
 
 jobs:
 
