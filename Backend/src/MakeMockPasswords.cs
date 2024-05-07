@@ -17,7 +17,7 @@ public static class MakeMockPasswords
             };
         });
         File.WriteAllText(
-            FilePath("json", "mock-users-mod.json"),
+            FilePath("json", "sys23-mock-users-all-emails-with-digits.json"),
             JSON.Stringify(mockUsers)
         );
         mockUsers = mockUsers.Map((x, i) =>
@@ -30,7 +30,7 @@ public static class MakeMockPasswords
             };
         });
         File.WriteAllText(
-            FilePath("json", "mock-users-mod-encrypt.json"),
+            FilePath("json", "sys23-mock-users-encrypted-passwords.json"),
             JSON.Stringify(mockUsers)
         );
     }
