@@ -11,5 +11,5 @@ Globals = Obj(new
     sessionLifeTimeHours = 2
 });
 
-// Server.Start();
-MakeMockPasswords.Make();
+Server.Start();
+// MakeMockPasswords.Make();
