@@ -25,7 +25,7 @@ public static class Utils
     public static bool IsPasswordGoodEnoughRegexVersion(string password)
     {
         // See: https://dev.to/rasaf_ibrahim/write-regex-password-validation-like-a-pro-5175
-        var pattern = @"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$";
+        var pattern = @"^(?=.*[0-9])(?=.*[a-zåäö])(?=.*[A-ZÅÄÖ])(?=.*\W).{8,}$";
         return Regex.IsMatch(password, pattern);
     }
 
