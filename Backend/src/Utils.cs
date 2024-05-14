@@ -16,10 +16,10 @@ public static class Utils
     public static bool IsPasswordGoodEnough(string password)
     {
         return password.Length >= 8
-            && password.Any(Char.IsAsciiDigit)
-            && password.Any(Char.IsAsciiLetterLower)
-            && password.Any(Char.IsAsciiLetterUpper)
-            && password.Any(x => !Char.IsAsciiLetterOrDigit(x));
+            && password.Any(Char.IsDigit)
+            && password.Any(Char.IsLower)
+            && password.Any(Char.IsUpper)
+            && password.Any(x => !Char.IsLetterOrDigit(x));
     }
 
     public static bool IsPasswordGoodEnoughRegexVersion(string password)
