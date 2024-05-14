@@ -40,14 +40,9 @@ jobs:
     - name: Execute unit tests
       run: dotnet test --logger "console;verbosity=detailed"
 
-    # Npm install of Newman
+    # Execute all endpoint tests
     - name: Cd into endpoint-tests
-      run: cd endpoint-tests
-    - name: Run npm install
-      run: npm install
-    
-    # Run the endpoint tests
-    - name: Run endpoint-tests
-      run: npm test
+      run: cd endpoint-tests && npm install && npm test
+
 
     
