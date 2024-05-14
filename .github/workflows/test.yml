@@ -40,8 +40,12 @@ jobs:
     - name: Execute unit tests
       run: dotnet test --logger "console;verbosity=detailed"
 
-    # Execute all endpoint tests
-    - name: Cd into endpoint-tests
+    # Start the backend without blocking the terminal
+    - name: Start the backend
+      run: Start-Job -inputobject $pwd -scriptblock { emacs "dotnet run" }
+
+    # Execute all endpoint tests in the repo
+    - name: Execute endpoint tests
       run: cd endpoint-tests && npm install && npm test
 
 
