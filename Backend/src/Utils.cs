@@ -35,7 +35,7 @@ public static class Utils
         replaceWith = " " + replaceWith + "$1";
         badWords.ForEach(bad =>
         {
-            var pattern = @$" {bad}([\.\!\?\:\; ])";
+            var pattern = @$" {bad}([\,\.\!\?\:\; ])";
             comment = Regex.Replace(
                 comment, pattern, replaceWith, RegexOptions.IgnoreCase);
         });
