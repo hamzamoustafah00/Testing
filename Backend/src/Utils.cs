@@ -52,8 +52,7 @@ public static class Utils
                 @"INSERT INTO users(firstName,lastName,email,password)
                 VALUES($firstName, $lastName, $email, $password)
             ", user);
-            // If we get an error from the DB then we haven't added
-            // the mock users, if not we have so add to the successful list
+
             if (!result.HasKey("error"))
             {
                 // The specification says return the user list without password
@@ -64,6 +63,44 @@ public static class Utils
         return successFullyWrittenUsers;
     }
 
-    // Now write the two last ones yourself!
-    // See: https://sys23m-jensen.lms.nodehill.se/uploads/videos/2021-05-18T15-38-54/sysa-23-presentation-2024-05-02-updated.html#8
+    public static Arr RemoveMockUsers()
+    {
+    // Lista för att hålla de användare som faktiskt togs bort
+    Arr successfullyRemovedUsers = new Arr();
+
+    foreach (var user in mockUsers)
+    {
+        // Kontrollera om användaren finns i databasen
+        var result = SQLQueryOne(
+            "SELECT * FROM users WHERE email = $email",
+            new { email = user.email }
+        );
+
+        // Om användaren finns i databasen, ta bort användaren
+        if (result != null && !result.HasKey("error"))
+        {
+            // Ta bort användaren
+            var deleteResult = SQLQueryOne(
+                "DELETE FROM users WHERE email = $email RETURNING firstName, lastName, email",
+                new { email = user.email }
+            );
+
+            // Om borttagningen lyckades, lägg till användaren i listan
+            if (deleteResult != null && !deleteResult.HasKey("error"))
+            {
+                successfullyRemovedUsers.Push(deleteResult);
+            }
+        }
+    }
+
+    return successfullyRemovedUsers;
+    }
+
+    public static Obj EmailDomainCounter(){
+        var resultFromDb = SQLQuery("SELECT * FROM emailDomainCounter");
+        var result = Obj();
+        resultFromDb.ForEach(row => result[row.domain] = row.counter );
+        return result;
+    }
+
 }
