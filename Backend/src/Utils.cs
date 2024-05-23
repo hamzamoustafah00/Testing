@@ -1,3 +1,7 @@
+﻿using System.Data;
+using System.Text.RegularExpressions;
+using System.Linq;
+
 namespace WebApp;
 public static class Utils
 {
@@ -65,42 +69,68 @@ public static class Utils
 
     public static Arr RemoveMockUsers()
     {
-    // Lista för att hålla de användare som faktiskt togs bort
-    Arr successfullyRemovedUsers = new Arr();
+        // Lista för att hålla de användare som faktiskt togs bort
+        Arr successfullyRemovedUsers = new Arr();
 
-    foreach (var user in mockUsers)
-    {
-        // Kontrollera om användaren finns i databasen
-        var result = SQLQueryOne(
-            "SELECT * FROM users WHERE email = $email",
-            new { email = user.email }
-        );
-
-        // Om användaren finns i databasen, ta bort användaren
-        if (result != null && !result.HasKey("error"))
+        foreach (var user in mockUsers)
         {
-            // Ta bort användaren
-            var deleteResult = SQLQueryOne(
-                "DELETE FROM users WHERE email = $email RETURNING firstName, lastName, email",
+            // Kontrollera om användaren finns i databasen
+            var result = SQLQueryOne(
+                "SELECT * FROM users WHERE email = $email",
                 new { email = user.email }
             );
 
-            // Om borttagningen lyckades, lägg till användaren i listan
-            if (deleteResult != null && !deleteResult.HasKey("error"))
+            // Om användaren finns i databasen, ta bort användaren
+            if (result != null && !result.HasKey("error"))
             {
-                successfullyRemovedUsers.Push(deleteResult);
+                // Ta bort användaren
+                var deleteResult = SQLQueryOne(
+                    "DELETE FROM users WHERE email = $email RETURNING firstName, lastName, email",
+                    new { email = user.email }
+                );
+
+                // Om borttagningen lyckades, lägg till användaren i listan
+                if (deleteResult != null && !deleteResult.HasKey("error"))
+                {
+                    successfullyRemovedUsers.Push(deleteResult);
+                }
             }
         }
+
+        return successfullyRemovedUsers;
     }
 
-    return successfullyRemovedUsers;
-    }
+    public static Obj EmailDomainCounter()
+    {
+        // Hämta alla e-postadresser från databasen
+        var users = SQLQuery("SELECT email FROM users");
 
-    public static Obj EmailDomainCounter(){
-        var resultFromDb = SQLQuery("SELECT * FROM emailDomainCounter");
-        var result = Obj();
-        resultFromDb.ForEach(row => result[row.domain] = row.counter );
+        // Skapa ett objekt för att lagra antalet användare per domän
+        var domainCounts = new Dictionary<string, int>();
+
+        // Räkna antalet användare per domän
+        foreach (var user in users)
+        {
+            var email = user["email"].ToString();
+            var domain = email.Split('@')[1];
+
+            if (domainCounts.ContainsKey(domain))
+            {
+                domainCounts[domain]++;
+            }
+            else
+            {
+                domainCounts[domain] = 1;
+            }
+        }
+
+        // Konvertera dictionary till Obj och returnera
+        var result = new Obj();
+        foreach (var domainCount in domainCounts)
+        {
+            result[domainCount.Key] = domainCount.Value;
+        }
+
         return result;
     }
-
 }

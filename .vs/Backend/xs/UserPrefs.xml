@@ -1,0 +1,31 @@
+﻿<Properties StartupConfiguration="{8B05F8D0-A606-4794-9600-DF73263903D1}|https">
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Backend/src/Acl.cs">
+    <Files>
+      <File FileName="Backend/unit-tests/UtilsTest.cs" Line="100" Column="5" />
+      <File FileName="Backend/src/Utils.cs" Line="27" Column="39" />
+      <File FileName="Backend/src/App.cs" Line="15" Column="43" />
+      <File FileName="Backend/src/Acl.cs" Line="19" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Backend">
+            <Node name="Backend" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="Backend" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.Backend PreferredExecutionTarget="/Applications/Google Chrome.app" />
+</Properties>

@@ -95,21 +95,21 @@ public class UtilsTest(Xlog Console)
     Console.WriteLine("The test passed!");
 }
 
-    // [Fact]
-// public void TestEmailDomainCounter()
-// {
-//     // Arrange: Setup expected results based on test data in the database
-//     var expectedResults = new Obj();
-//     var expectedData = SQLQuery("SELECT * FROM emailDomainCounter LIMIT 10");
-//     expectedData.ForEach(row => expectedResults[row.domain] = row.counter);
+    [Fact]
+public void TestEmailDomainCounter()
+ {
+     // Arrange: Setup expected results based on test data in the database
+     var expectedResults = new Obj();
+     var expectedData = SQLQuery("SELECT * FROM emailDomainCounter LIMIT 10");
+     expectedData.ForEach(row => expectedResults[row.domain] = row.counter);
 
-//     // Act: Call the method
-//     var actualResults = Utils.EmailDomainCounter();
+     // Act: Call the method
+     var actualResults = Utils.EmailDomainCounter();
 
-//     // Assert: Check that the actual results match the expected results
-//     Assert.Equivalent(expectedResults, actualResults);
-//     Console.WriteLine("The test passed!");
-// }
+    // Assert: Check that the actual results match the expected results
+     Assert.Equivalent(expectedResults, actualResults);
+     Console.WriteLine("The test passed!");
+ }
 
 
 

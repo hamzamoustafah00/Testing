@@ -11,5 +11,5 @@ Globals = Obj(new
     sessionLifeTimeHours = 2
 });
 
-// Server.Start();
-Log(WebApp.Utils.EmailDomainCounter());
+Server.Start();
+// Log(WebApp.Utils.EmailDomainCounter());
