@@ -100,7 +100,7 @@ public static class Utils
         return successfullyRemovedUsers;
     }
 
-    public static Obj EmailDomainCounter()
+    public static Obj Count­Do­mains­FromU­se­rE­mails()
     {
         // Hämta alla e-postadresser från databasen
         var users = SQLQuery("SELECT email FROM users");

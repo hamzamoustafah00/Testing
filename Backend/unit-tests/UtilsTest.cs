@@ -104,7 +104,7 @@ public void TestEmailDomainCounter()
      expectedData.ForEach(row => expectedResults[row.domain] = row.counter);
 
      // Act: Call the method
-     var actualResults = Utils.EmailDomainCounter();
+     var actualResults = Utils.Count­Do­mains­FromU­se­rE­mails();
 
     // Assert: Check that the actual results match the expected results
      Assert.Equivalent(expectedResults, actualResults);
