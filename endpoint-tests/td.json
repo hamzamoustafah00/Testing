@@ -1,0 +1,40 @@
+{
+  "counter": 0,
+  "books": [
+    {
+      "id": 1,
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "genre": "Classic"
+    },
+    {
+      "id": 2,
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "genre": "Classic"
+    },
+    {
+      "id": 3,
+      "title": "1984",
+      "author": "George Orwell",
+      "genre": "Dystopian"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "bookId": 1,
+      "comment": "A masterpiece!"
+    },
+    {
+      "id": 2,
+      "bookId": 2,
+      "comment": "A must-read for everyone."
+    },
+    {
+      "id": 3,
+      "bookId": 3,
+      "comment": "Terrifying yet brilliant."
+    }
+  ]
+}
