@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "48f765dc-278e-4797-957d-01f24990ba20",
-		"name": "Example",
+		"_postman_id": "new-id",
+		"name": "Library Management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30881265"
+		"_exporter_id": "new-exporter-id"
 	},
 	"item": [
 		{
@@ -48,40 +48,38 @@
 							"// Test data to use, pasted from our json file with test data",
 							"let testData = {",
 							"  \"counter\": 0,",
-							"  \"categories\": [",
+							"  \"authors\": [",
 							"    {",
-							"      \"name\": \"Grönsaker\",",
-							"      \"description\": \"Färska grönsaker.\"",
+							"      \"name\": \"J.K. Rowling\",",
+							"      \"biography\": \"British author, best known for the Harry Potter series.\"",
 							"    },",
 							"    {",
-							"      \"name\": \"Frukter\",",
-							"      \"description\": \"Färska frukter.\"",
+							"      \"name\": \"George R.R. Martin\",",
+							"      \"biography\": \"American novelist and short-story writer, screenwriter, and television producer.\"",
 							"    },",
 							"    {",
-							"      \"name\": \"Rengöringsprodukter\",",
-							"      \"description\": \"Allt du behöver för att hålla hemmet rent.\"",
+							"      \"name\": \"J.R.R. Tolkien\",",
+							"      \"biography\": \"English writer, poet, philologist, and academic, best known for The Lord of the Rings.\"",
 							"    }",
 							"  ],",
-							"  \"products\": [",
+							"  \"books\": [",
 							"    {",
-							"      \"name\": \"Gurka\",",
-							"      \"description\": \"Färsk, krispig gurka. Ekologiskt odlad i Bjärred.\",",
-							"      \"price\": 25,",
-							"      \"categoryId\": \"Grönsaker\"",
+							"      \"title\": \"Harry Potter and the Philosopher's Stone\",",
+							"      \"description\": \"The first novel in the Harry Potter series.\",",
+							"      \"price\": 20,",
+							"      \"authorId\": \"J.K. Rowling\"",
 							"    }",
 							"  ],",
-							"  \"comments\": [",
+							"  \"reviews\": [",
 							"    {",
-							"      \"comment\": \"Very nice gurka\",",
-							"      \"productId\": \"Gurka\",",
-							"      \"userId\": 3",
+							"      \"review\": \"Amazing book!\",",
+							"      \"bookId\": \"Harry Potter and the Philosopher's Stone\",",
+							"      \"userId\": 1",
 							"    }",
 							"  ]",
 							"}",
 							"",
 							"// Set the test data as a collection variable",
-							"// (collection variables are available",
-							"//. for all requests in a colleciton)",
 							"pm.collectionVariables.set(\"testData\",testData);"
 						],
 						"type": "text/javascript",
@@ -117,7 +115,7 @@
 			"response": []
 		},
 		{
-			"name": "Create categories",
+			"name": "Create authors",
 			"event": [
 				{
 					"listen": "test",
@@ -125,8 +123,8 @@
 						"exec": [
 							"// Get the test data",
 							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
+							"// Get the current author",
+							"let author = testData.authors[testData.counter];",
 							"",
 							"// Read the response",
 							"let response = pm.response;",
@@ -147,26 +145,25 @@
 							"// also add the id in our test data (for future tests)",
 							"pm.test(\"We should get an insertId back\", () => {",
 							"    pm.expect(responseData.insertId).to.be.a('number');",
-							"    // Add the property id to the category with the",
-							"    // id recieved from the REST-api",
-							"    category.id = responseData.insertId;",
+							"    // Add the property id to the author with the",
+							"    // id received from the REST-api",
+							"    author.id = responseData.insertId;",
 							"    // Log",
-							"    console.log(\"The category has been created\", category);",
+							"    console.log(\"The author has been created\", author);",
 							"});",
 							"",
 							"// Update the counter and save the updated test data",
-							"// (also including the id we set in the second test)",
 							"testData.counter++;",
 							"pm.collectionVariables.set(\"testData\",testData);",
 							"",
-							"// If there are more categories - then \"loop\"",
+							"// If there are more authors - then \"loop\"",
 							"// through them using setNextRequest",
-							"if(testData.categories[testData.counter]){",
-							"    pm.execution.setNextRequest(\"Create categories\");",
+							"if(testData.authors[testData.counter]){",
+							"    pm.execution.setNextRequest(\"Create authors\");",
 							"}",
 							"// Otherwise console.log \"All done\"",
 							"else {",
-							"    console.log(\"All categories have been created.\");",
+							"    console.log(\"All authors have been created.\");",
 							"    // IMPORTANT: Set counter to 0 in preparation of next request",
 							"    testData.counter = 0;",
 							"    pm.collectionVariables.set(\"testData\",testData);",
@@ -182,13 +179,13 @@
 						"exec": [
 							"// Get the test data",
 							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
+							"// Get the current author",
+							"let author = testData.authors[testData.counter];",
 							"",
 							"// pm variables have a scope of one request",
 							"// setting two variables used in the body",
-							"pm.variables.set(\"name\", category.name);",
-							"pm.variables.set(\"description\", category.description);"
+							"pm.variables.set(\"name\", author.name);",
+							"pm.variables.set(\"biography\", author.biography);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -200,7 +197,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{name}}\",\n    \"description\": \"{{description}}\"\n}",
+					"raw": "{\n    \"name\": \"{{name}}\",\n    \"biography\": \"{{biography}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -208,7 +205,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:3001/api/categories",
+					"raw": "http://127.0.0.1:3001/api/authors",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -219,14 +216,14 @@
 					"port": "3001",
 					"path": [
 						"api",
-						"categories"
+						"authors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get categories",
+			"name": "Get authors",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -234,14 +231,16 @@
 						"exec": [
 							"// Get the test data",
 							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
+							"// Get the current author",
+							"let author = testData.authors[testData.counter];",
 							"",
 							"// Set a pm variable to id (it is used in the request url)",
-							"pm.variables.set(\"id\", category.id); "
+							"pm.variables.set(\"id\", author.id); "
 						],
 						"type": "text/javascript",
 						"packages": {}
+
+
 					}
 				},
 				{
@@ -250,8 +249,8 @@
 						"exec": [
 							"// Get the test data",
 							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
+							"// Get the current author",
+							"let author = testData.authors[testData.counter];",
 							"",
 							"// Read the response",
 							"let response = pm.response;",
@@ -263,26 +262,25 @@
 							"    pm.expect(response.code).to.equal(200);",
 							"});",
 							"",
-							"// Test that the REST-api returns the sama data",
-							"// as our test data for the category",
-							"pm.test(\"Test that the correct category data is returned\", ()=> {",
-							"  console.log(\"category\", category);",
-							"  console.log(\"responseData\", responseData);",
-							"  pm.expect(category).to.deep.equal(responseData); ",
+							"// Test that the correct author is received",
+							"pm.test(\"We should get the correct author back\", () => {",
+							"    pm.expect(responseData.id).to.equal(author.id);",
+							"    pm.expect(responseData.name).to.equal(author.name);",
+							"    pm.expect(responseData.biography).to.equal(author.biography);",
 							"});",
 							"",
 							"// Update the counter and save the updated test data",
 							"testData.counter++;",
 							"pm.collectionVariables.set(\"testData\",testData);",
 							"",
-							"// If there are more categories - then \"loop\"",
+							"// If there are more authors - then \"loop\"",
 							"// through them using setNextRequest",
-							"if(testData.categories[testData.counter]){",
-							"    pm.execution.setNextRequest(\"Get categories\");",
+							"if(testData.authors[testData.counter]){",
+							"    pm.execution.setNextRequest(\"Get authors\");",
 							"}",
 							"// Otherwise console.log \"All done\"",
 							"else {",
-							"    console.log(\"All categories have been read correctly.\");",
+							"    console.log(\"All authors have been received.\");",
 							"    // IMPORTANT: Set counter to 0 in preparation of next request",
 							"    testData.counter = 0;",
 							"    pm.collectionVariables.set(\"testData\",testData);",
@@ -297,7 +295,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:3001/api/categories/{{id}}",
+					"raw": "http://127.0.0.1:3001/api/authors/{{id}}",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -308,7 +306,7 @@
 					"port": "3001",
 					"path": [
 						"api",
-						"categories",
+						"authors",
 						"{{id}}"
 					]
 				}
@@ -316,7 +314,7 @@
 			"response": []
 		},
 		{
-			"name": "Change categories",
+			"name": "Create books",
 			"event": [
 				{
 					"listen": "test",
@@ -324,236 +322,8 @@
 						"exec": [
 							"// Get the test data",
 							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
-							"",
-							"// Read the response",
-							"let response = pm.response;",
-							"// Read the response data",
-							"let responseData = pm.response.json();",
-							"",
-							"// Test that we get a 200 code (ok request) back",
-							"pm.test(\"We should get an ok (code 200) back\",()=> {",
-							"    pm.expect(response.code).to.equal(200);",
-							"});",
-							"",
-							"// Test that affected rows equals 1",
-							"pm.test(\"Expect rowsAffected to equal 1\", () => {",
-							"    pm.expect(responseData.rowsAffected).to.equal(1);",
-							"});",
-							"",
-							"// Update the counter and save the updated test data",
-							"testData.counter++;",
-							"pm.collectionVariables.set(\"testData\",testData);",
-							"",
-							"// If there are more categories - then \"loop\"",
-							"// through them using setNextRequest",
-							"if(testData.categories[testData.counter]){",
-							"    pm.execution.setNextRequest(\"Change categories\");",
-							"}",
-							"// Otherwise console.log \"All done\"",
-							"else {",
-							"    console.log(\"All category-decriptions have been changed.\");",
-							"    // IMPORTANT: Set counter to 0 in preparation of next request",
-							"    testData.counter = 0;",
-							"    pm.collectionVariables.set(\"testData\",testData);",
-							"}"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"// Get the test data",
-							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
-							"",
-							"// Change the description and save to collectionVariables",
-							"category.description += \" Some extra text in the description.\";",
-							"pm.collectionVariables.set(\"testData\", testData);",
-							"",
-							"// Set a pm variable to id (it is used in the request url)",
-							"pm.variables.set(\"id\", category.id); ",
-							"",
-							"// Set a pm variable to description (it is used in the request body)",
-							"pm.variables.set(\"description\", category.description);"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"description\": \"{{description}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://127.0.0.1:3001/api/categories/{{id}}",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"categories",
-						"{{id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get categories after change",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"// Get the test data",
-							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
-							"",
-							"// Set a pm variable to id (it is used in the request url)",
-							"pm.variables.set(\"id\", category.id); "
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Get the test data",
-							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let category = testData.categories[testData.counter];",
-							"",
-							"// Read the response",
-							"let response = pm.response;",
-							"// Read the response data",
-							"let responseData = pm.response.json();",
-							"",
-							"// Test that we get a 200 code (ok request) back",
-							"pm.test(\"We should get an ok (code 200) back\",()=> {",
-							"    pm.expect(response.code).to.equal(200);",
-							"});",
-							"",
-							"// Test that the REST-api returns the sama data",
-							"// as our test data for the category",
-							"pm.test(\"Test that the correct category data is returned\", ()=> {",
-							"  console.log(\"category\", category);",
-							"  console.log(\"responseData\", responseData);",
-							"  pm.expect(category).to.deep.equal(responseData); ",
-							"});",
-							"",
-							"// Update the counter and save the updated test data",
-							"testData.counter++;",
-							"pm.collectionVariables.set(\"testData\",testData);",
-							"",
-							"// If there are more categories - then \"loop\"",
-							"// through them using setNextRequest",
-							"if(testData.categories[testData.counter]){",
-							"    pm.execution.setNextRequest(\"Get categories after change\");",
-							"}",
-							"// Otherwise console.log \"All done\"",
-							"else {",
-							"    console.log(\"All categories have been read correctly after the change.\");",
-							"    // IMPORTANT: Set counter to 0 in preparation of next request",
-							"    testData.counter = 0;",
-							"    pm.collectionVariables.set(\"testData\",testData);",
-							"}"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:3001/api/categories/{{id}}",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "3001",
-					"path": [
-						"api",
-						"categories",
-						"{{id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create products",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"// Get the test data",
-							"let testData = pm.collectionVariables.get(\"testData\");",
-							"",
-							"// Get the current products",
-							"let product = testData.products[testData.counter];",
-							"",
-							"// Replace the category name in the property categoryId",
-							"// with actual id of the category",
-							"",
-							"// Find the correct category",
-							"let categoryWithMatchingName = testData.categories.find(category => {",
-							"    return category.name == product.categoryId",
-							"});",
-							"// Change the categoryId property of the product",
-							"// to the id of the matching category",
-							"product.categoryId = categoryWithMatchingName.id;",
-							"",
-							"// Save changes to our test data (the new value of categoryId)",
-							"pm.collectionVariables.set(\"testData\",testData);",
-							"",
-							"// pm variables have a scope of one request",
-							"// setting four variables used in the body",
-							"pm.variables.set(\"name\", product.name);",
-							"pm.variables.set(\"description\", product.description);",
-							"pm.variables.set(\"price\", product.price);",
-							"pm.variables.set(\"categoryId\", product.categoryId);"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Get the test data",
-							"let testData = pm.collectionVariables.get(\"testData\");",
-							"// Get the current category",
-							"let product = testData.products[testData.counter];",
+							"// Get the current book",
+							"let book = testData.books[testData.counter];",
 							"",
 							"// Read the response",
 							"let response = pm.response;",
@@ -574,30 +344,49 @@
 							"// also add the id in our test data (for future tests)",
 							"pm.test(\"We should get an insertId back\", () => {",
 							"    pm.expect(responseData.insertId).to.be.a('number');",
-							"    // Add the property id to the category with the",
-							"    // id recieved from the REST-api",
-							"    product.id = responseData.insertId;",
+							"    // Add the property id to the book with the",
+							"    // id received from the REST-api",
+							"    book.id = responseData.insertId;",
 							"    // Log",
-							"    console.log(\"The product has been created\", product);",
+							"    console.log(\"The book has been created\", book);",
 							"});",
 							"",
 							"// Update the counter and save the updated test data",
-							"// (also including the id we set in the second test)",
 							"testData.counter++;",
 							"pm.collectionVariables.set(\"testData\",testData);",
 							"",
-							"// If there are more products - then \"loop\"",
+							"// If there are more books - then \"loop\"",
 							"// through them using setNextRequest",
-							"if(testData.products[testData.counter]){",
-							"    pm.execution.setNextRequest(\"Create products\");",
+							"if(testData.books[testData.counter]){",
+							"    pm.execution.setNextRequest(\"Create books\");",
 							"}",
 							"// Otherwise console.log \"All done\"",
 							"else {",
-							"    console.log(\"All products have been created.\");",
+							"    console.log(\"All books have been created.\");",
 							"    // IMPORTANT: Set counter to 0 in preparation of next request",
 							"    testData.counter = 0;",
 							"    pm.collectionVariables.set(\"testData\",testData);",
 							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Get the test data",
+							"let testData = pm.collectionVariables.get(\"testData\");",
+							"// Get the current book",
+							"let book = testData.books[testData.counter];",
+							"",
+							"// pm variables have a scope of one request",
+							"// setting two variables used in the body",
+							"pm.variables.set(\"title\", book.title);",
+							"pm.variables.set(\"description\", book.description);",
+							"pm.variables.set(\"price\", book.price);",
+							"pm.variables.set(\"authorId\", book.authorId);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -609,7 +398,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{name}}\",\n    \"description\": \"{{description}}\",\n    \"price\": {{price}},\n    \"categoryId\": {{categoryId}}\n}",
+					"raw": "{\n    \"title\": \"{{title}}\",\n    \"description\": \"{{description}}\",\n    \"price\": {{price}},\n    \"authorId\": {{authorId}}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -617,7 +406,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:3001/api/products",
+					"raw": "http://127.0.0.1:3001/api/books",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -628,21 +417,104 @@
 					"port": "3001",
 					"path": [
 						"api",
-						"products"
+						"books"
 					]
 				}
 			},
 			"response": []
-		}
-	],
-	"variable": [
-		{
-			"key": "data",
-			"value": ""
 		},
 		{
-			"key": "testData",
-			"value": ""
+			"name": "Get books",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Get the test data",
+							"let testData = pm.collectionVariables.get(\"testData\");",
+							"// Get the current book",
+							"let book = testData.books[testData.counter];",
+							"",
+							"// Set a pm variable to id (it is used in the request url)",
+							"pm.variables.set(\"id\", book.id); "
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Get the test data",
+							"let testData = pm.collectionVariables.get(\"testData\");",
+							"// Get the current book",
+							"let book = testData.books[testData.counter];",
+							"",
+							"// Read the response",
+							"let response = pm.response;",
+							"// Read the response data",
+							"let responseData = pm.response.json();",
+							"",
+							"// Test that we get a 200 code (ok request) back",
+							"pm.test(\"We should get an ok (code 200) back\",()=> {",
+							"    pm.expect(response.code).to.equal(200);",
+							"});",
+							"",
+							"// Test that the correct book is received",
+							"pm.test(\"We should get the correct book back\", () => {",
+							"    pm.expect(responseData.id).to.equal(book.id);",
+							"    pm.expect(responseData.title).to.equal(book.title);",
+							"    pm.expect(responseData.description).to.equal(book.description);",
+							"    pm.expect(responseData.price).to.equal(book.price);",
+							"    pm.expect(responseData.authorId).to.equal(book.authorId);",
+							"});",
+						
+
+	"",
+							"// Update the counter and save the updated test data",
+							"testData.counter++;",
+							"pm.collectionVariables.set(\"testData\",testData);",
+							"",
+							"// If there are more books - then \"loop\"",
+							"// through them using setNextRequest",
+							"if(testData.books[testData.counter]){",
+							"    pm.execution.setNextRequest(\"Get books\");",
+							"}",
+							"// Otherwise console.log \"All done\"",
+							"else {",
+							"    console.log(\"All books have been received.\");",
+							"    // IMPORTANT: Set counter to 0 in preparation of next request",
+							"    testData.counter = 0;",
+							"    pm.collectionVariables.set(\"testData\",testData);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3001/api/books/{{id}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"books",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
